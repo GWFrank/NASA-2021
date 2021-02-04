@@ -41,7 +41,7 @@ Refernce: https://en.wikipedia.org/wiki/Intranet https://en.wikipedia.org/wiki/G
 
 A gateway is used to communicate between discrete networks. Since a communication in an intranet might not be a cross-network one, not every packet is necessary to go through the gateway.
 
-#### 7. True **加入書籤**
+#### 7. True
 
 Reference: https://serverfault.com/questions/373629/what-is-the-correct-response-for-a-dns-server-when-a-domain-does-not-exist
 
