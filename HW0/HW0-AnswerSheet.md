@@ -41,7 +41,7 @@ Refernce: https://en.wikipedia.org/wiki/Intranet https://en.wikipedia.org/wiki/G
 
 A gateway is used to communicate between discrete networks. Since a communication in an intranet might not be a cross-network one, not every packet is necessary to go through the gateway.
 
-#### 7. True
+#### 7. True **加入書籤**
 
 Reference: https://serverfault.com/questions/373629/what-is-the-correct-response-for-a-dns-server-when-a-domain-does-not-exist
 
@@ -73,55 +73,132 @@ DHCP servers only helps managing IPs, the devices will set those parameters them
 
 #### 1.
 
-```shell
-(base)
-# frank @ Frank-Desktop in /mnt/c/Users/frank [1:45:24]
+Refernce: https://www.cloudns.net/blog/10-most-used-nslookup-commands/ https://ithelp.ithome.com.tw/articles/10214407
+
+**(a)** www.ntu.edu.tw : 140.112.8.116
+
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [16:55:44] 
 $ nslookup www.ntu.edu.tw
-Server:         192.168.50.1
-Address:        192.168.50.1#53
+Server:         127.0.0.53
+Address:        127.0.0.53#53
 
 Non-authoritative answer:
 Name:   www.ntu.edu.tw
 Address: 140.112.8.116
+```
 
-(base)
-# frank @ Frank-Desktop in /mnt/c/Users/frank [1:45:26]
+**(b)** csie.ntu.edu.tw : 140.112.30.26
+
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [16:55:52] 
 $ nslookup csie.ntu.edu.tw
-Server:         192.168.50.1
-Address:        192.168.50.1#53
+Server:         127.0.0.53
+Address:        127.0.0.53#53
 
 Non-authoritative answer:
 Name:   csie.ntu.edu.tw
 Address: 140.112.30.26
+```
 
-(base)
-# frank @ Frank-Desktop in /mnt/c/Users/frank [1:45:28]
+**(c)** linux1.csie.ntu.edu.tw : 140.112.30.32
+
+
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [16:56:00] 
 $ nslookup linux1.csie.ntu.edu.tw
-Server:         192.168.50.1
-Address:        192.168.50.1#53
+Server:         127.0.0.53
+Address:        127.0.0.53#53
 
 Non-authoritative answer:
 Name:   linux1.csie.ntu.edu.tw
 Address: 140.112.30.32
+```
 
-(base)
-# frank @ Frank-Desktop in /mnt/c/Users/frank [1:45:32]
+**(d)** ceiba.ntu.edu.tw : 140.112.161.178
+
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [16:56:06] 
 $ nslookup ceiba.ntu.edu.tw
-Server:         192.168.50.1
-Address:        192.168.50.1#53
+Server:         127.0.0.53
+Address:        127.0.0.53#53
 
 Non-authoritative answer:
 Name:   ceiba.ntu.edu.tw
 Address: 140.112.161.178
 ```
 
-(a) www.ntu.edu.tw : 140.112.8.116
+#### 2.
 
-(b) csie.ntu.edu.tw : 140.112.30.26
+**(a)** Public IP: 140.112.150.127, Private IP: 192.168.50.52
 
-(c) linux1.csie.ntu.edu.tw : 140.112.30.32
+Reference: https://opensource.com/article/18/5/how-find-ip-address-linux
 
-(d) ceiba.ntu.edu.tw : 140.112.161.178
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [17:04:26] 
+$ hostname -I | awk '{print $1}'
+192.168.50.52
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [17:08:35] 
+$ curl ifconfig.me
+140.112.150.127
+```
+
+**(b)** DNS server IP: 140.112.254.4
+
+Refernce: https://www.cloudns.net/blog/10-most-used-nslookup-commands/ https://ithelp.ithome.com.tw/articles/10214407
+
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [17:24:28] 
+$ nslookup csie.ntu.edu.tw
+Server:         140.112.254.4
+Address:        140.112.254.4#53
+
+Non-authoritative answer:
+Name:   csie.ntu.edu.tw
+Address: 140.112.30.26
+```
+
+**(c)** DNS server IP: 127.0.0.53
+
+```
+(base) 
+# frank @ Frank-Desktop-Linux in ~ [16:55:52] 
+$ nslookup csie.ntu.edu.tw
+Server:         127.0.0.53
+Address:        127.0.0.53#53
+
+Non-authoritative answer:
+Name:   csie.ntu.edu.tw
+Address: 140.112.30.26
+```
 
 
 
+## System Administration
+
+### 1. Capture The Flag
+
+#### 1.
+
+Flag: `NASA{echo_"$USER"}`, `NASA{id_-u_-n}`
+
+Reference: https://www.cyberciti.biz/faq/appleosx-bsd-shell-script-get-current-user/
+
+#### 2.
+
+Flag: `NASA{ssh_bbsu@ptt.cc}`
+
+Refernce: https://chakra-zh.blogspot.com/2013/02/chakra-linux-ssh-ptt.html
+
+#### 3.
+
+Flag: `NASA{man_man}`
+
+Reference: B09前瞻營課程內容&手冊
