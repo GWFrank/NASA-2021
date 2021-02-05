@@ -19,9 +19,11 @@ Refernce: B09新生手冊
 
 The "5G" in "csie-5G" means 5GHz, which is the frequency of WiFi signal.
 
-#### 3. *False
+#### 3. True
 
 Refernce: https://www.jannet.hk/zh-Hant/post/network-address-translation-nat/
+
+A PAT(Port Address Translation) can achieve port-to-port translation.
 
 #### 4. False
 
@@ -41,7 +43,7 @@ Refernce: https://en.wikipedia.org/wiki/Intranet https://en.wikipedia.org/wiki/G
 
 A gateway is used to communicate between discrete networks. Since a communication in an intranet might not be a cross-network one, not every packet is necessary to go through the gateway.
 
-#### 7. True
+#### 7. False
 
 Reference: https://serverfault.com/questions/373629/what-is-the-correct-response-for-a-dns-server-when-a-domain-does-not-exist
 
@@ -53,11 +55,11 @@ Reference: http://linux.vbird.org/linux_server/0340dhcp.php https://mkdev.me/en/
 
 DHCP is used to automaticly set some network parameters, but this progress can be done manually. DNS is used to convert domain names into corresponding IP addresses, but since we already know our destination's IP address, DNS is not needed. NAT is used in routers to convert router's assigned public IP into private IPs of deviced in that LAN, but if both our device and the destination is directly connected to the Internet, NAT isn't necessary.
 
-#### 9. False
+#### 9. True
 
-Reference: https://en.wikipedia.org/wiki/HTTPS https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol https://en.wikipedia.org/wiki/IPsec
+Reference: https://en.wikipedia.org/wiki/HTTPS https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
 
-Although HTTP protocol doesn't encrypt the message, in other layers of network the content might still be encrypted. For example if you use IPsec in layer 3, the payload is encrypted.
+HTTP protocol doesn't encrypt any data.
 
  #### 10. False
 
@@ -68,6 +70,36 @@ DHCP servers only helps managing IPs, the devices will set those parameters them
 
 
 ### 2. Short Answer
+
+#### 1.
+
+Reference: 109-1計算機概論(單數班)課程內容 https://mkdev.me/en/posts/how-networks-work-what-is-a-switch-router-dns-dhcp-nat-vpn-and-a-dozen-of-other-useful-things https://en.wikipedia.org/wiki/MAC_address
+
+**(a)** MAC address
+
+A MAC address a string of number used as a network address. Each network interface controller is assigned with a unique MAC address. This address is used in layer 2 of OSI model. Ethernet, WiFi, and Bluetooth all use MAC addresses.
+
+**(b)** Router
+
+Routers can connect different LANs, route packets from one network to another network. They work on layer 3 of OSI model, and use IP address to direct packets.
+
+**(c)** Switch
+
+Switches work on layer 2 of OSI model. They use MAC address to direct frames from one device to another, and they connect hosts to form a LAN.
+
+#### 2.
+
+Reference: https://www.jannet.hk/zh-Hant/post/IP-Address-Version-4-IPv4
+
+A subnet mask is a string of number that can be used to identify the network ID of an IP address.
+
+(b), (c)
+
+
+
+
+
+
 
 
 
@@ -113,7 +145,7 @@ Address: 140.112.30.26
 ```
 (base) 
 # frank @ Frank-Desktop-Linux in ~ [16:56:00] 
-$ nslookup linux1.csie.ntu.edu.tw
+$ nslookup linux1.csie.ntu.edu.tw 
 Server:         127.0.0.53
 Address:        127.0.0.53#53
 
@@ -138,7 +170,9 @@ Address: 140.112.161.178
 
 #### 2.
 
-**(a)** Public IP: 140.112.150.127, Private IP: 192.168.50.52
+**(a)**
+
+Public IP: 140.112.150.127, Private IP: 192.168.50.52
 
 Reference: https://opensource.com/article/18/5/how-find-ip-address-linux
 
@@ -153,9 +187,11 @@ $ curl ifconfig.me
 140.112.150.127
 ```
 
-**(b)** DNS server IP: 140.112.254.4
+**(b)**
 
 Refernce: https://www.cloudns.net/blog/10-most-used-nslookup-commands/ https://ithelp.ithome.com.tw/articles/10214407
+
+DNS server IP: 140.112.254.4
 
 ```
 (base) 
@@ -169,7 +205,23 @@ Name:   csie.ntu.edu.tw
 Address: 140.112.30.26
 ```
 
-**(c)** DNS server IP: 127.0.0.53
+Delegation path: 140.112.254.4 -> b.root-servers.net -> g.dns.tw -> moemoon.edu.tw -> dns.tp1rc.edu.tw -> csman.csie.ntu.edu.tw
+
+```
+(base) 
+# frank @ Frank-UX425EA-Linux in ~ [14:20:08] 
+$ dig +trace csie.ntu.edu.tw | grep Received
+;; Received 1137 bytes from 140.112.254.4#53(140.112.254.4) in 3 ms
+;; Received 1004 bytes from 199.9.14.201#53(b.root-servers.net) in 223 ms
+;; Received 784 bytes from 220.229.225.195#53(g.dns.tw) in 7 ms
+;; Received 382 bytes from 192.83.166.17#53(moemoon.edu.tw) in 3 ms
+;; Received 117 bytes from 163.28.16.10#53(dns.tp1rc.edu.tw) in 3 ms
+;; Received 1365 bytes from 140.112.30.13#53(csman.csie.ntu.edu.tw) in 0 ms
+```
+
+**(c)**
+
+DNS server IP: 127.0.0.53
 
 ```
 (base) 
@@ -183,6 +235,8 @@ Name:   csie.ntu.edu.tw
 Address: 140.112.30.26
 ```
 
+**(d)**
+
 
 
 ## System Administration
@@ -191,9 +245,9 @@ Address: 140.112.30.26
 
 #### 1.
 
-Flag: `NASA{echo_"$USER"}`, `NASA{id_-u_-n}`
+Flag: `NASA{echo_"$USER"}`, `NASA{id_-u_-n}`, `NASA{whoami}`
 
-Reference: https://www.cyberciti.biz/faq/appleosx-bsd-shell-script-get-current-user/
+Reference: 陳可邦 林弘毅 https://www.cyberciti.biz/faq/appleosx-bsd-shell-script-get-current-user/
 
 #### 2.
 
@@ -297,11 +351,11 @@ cat flag
 
 #### 10.
 
-Flag: `NASA{OBS3RV3_M3}`
+Flag: `NASA{0BS3RV3_M3}`
 
 Reference: https://www.twblogs.net/a/5b7afe162b7177539c2499ab https://linuxize.com/post/vim-search/ https://blog.gtwang.org/useful-tools/how-to-use-vim-as-a-hex-editor/
 
-In terminal:
+In bash:
 
 ```
 cd ~/image
@@ -314,15 +368,14 @@ In vim:
 
 ```
 :%! xxd
-/NA
 /SA
 ```
 
 #### 11.
 
-Flag: `NASA{kill_-9_"$(pgrep_guineaPig)"}`
+Flag: `NASA{kill_-9_"$(pgrep_guineaPig)"}` `NASA{pkill_-9_guineaPig}`
 
-Reference: B09前瞻營課程內容&手冊 https://blog.gtwang.org/linux/linux-howto-find-process-by-name/
+Reference: 陳可邦 林弘毅 B09前瞻營課程內容&手冊 https://blog.gtwang.org/linux/linux-howto-find-process-by-name/
 
 #### 12.
 
