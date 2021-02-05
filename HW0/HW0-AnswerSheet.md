@@ -89,19 +89,33 @@ Switches work on layer 2 of OSI model. They use MAC address to direct frames fro
 
 #### 2.
 
-Reference: https://www.jannet.hk/zh-Hant/post/IP-Address-Version-4-IPv4
+Reference: https://www.jannet.hk/zh-Hant/post/IP-Address-Version-4-IPv4 https://www.netadmin.com.tw/netadmin/zh-tw/technology/D5162EE38674405EADB022E0802A05B2 https://www.twbsd.org/cht/book/ch05.htm
 
-A subnet mask is a string of number that can be used to identify the network ID of an IP address.
+A subnet mask is a string of number that can be used to identify the network prefix of an IP address. When the subnet mask of an IP address is applied by a bitwise AND to the IP address, the IP address's network prefix is yielded. If two valid IP address have the same network prefix when applied with the same mask, they are in the same subnet.
 
-(b), (c)
+From 192.168.0.1/23, we know:
 
+|                | Binary form                           | Dot-deciml form |
+| -------------- | ------------------------------------- | --------------- |
+| IP address     | `11000000.10101000.00000000.00000001` | 192.168.0.1     |
+| Subnet mask    | `11111111.11111111.11111110.00000000` | 255.255.254.0   |
+| Network prefix | `11000000.10101000.00000000.00000000` | 192.168.0.0     |
 
+**(a)** 192.167.0.1 No
 
+Its network prefix is 192.167.0.0, which is different, therefore is not in the same subnet.
 
+**(b)** 192.168.0.0 Yes
 
+It has the same network prefix, and is a valid IP address. But this address is the network address of this subnet, therefore cannot be assigned to a host.
 
+**(c)** 192.168.1.0 Yes
 
+It has the same network prefix, and is a valid IP address too.
 
+**(d)** 193.168.0.1 No
+
+Its network prefix is 193.168.0.0, which is different, therefore is not in the same subnet.
 
 
 
