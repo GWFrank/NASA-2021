@@ -25,7 +25,7 @@ Refernce: https://www.jannet.hk/zh-Hant/post/network-address-translation-nat/
 
 #### 4. False
 
-Refernce: 109-1 計算機概論(單數班)課程內容 https://mkdev.me/en/posts/how-networks-work-what-is-a-switch-router-dns-dhcp-nat-vpn-and-a-dozen-of-other-useful-things
+Refernce: 109-1計算機概論(單數班)課程內容 https://mkdev.me/en/posts/how-networks-work-what-is-a-switch-router-dns-dhcp-nat-vpn-and-a-dozen-of-other-useful-things
 
 Asscociating multiple devices with one single public IP can be achieved with hiding multiple device under a router. One device (like a laptop or PC) might also have multiple IPs because the device has multiple NIC in it (WiFi + Ethernet for example).
 
@@ -65,7 +65,11 @@ Reference: http://linux.vbird.org/linux_server/0340dhcp.php
 
 DHCP servers only helps managing IPs, the devices will set those parameters themselves, and then the router can communicate directly with the device.
 
+
+
 ### 2. Short Answer
+
+
 
 
 
@@ -202,3 +206,149 @@ Refernce: https://chakra-zh.blogspot.com/2013/02/chakra-linux-ssh-ptt.html
 Flag: `NASA{man_man}`
 
 Reference: B09前瞻營課程內容&手冊
+
+#### 4.
+
+Flag: `NASA{71_921}`
+
+Reference: https://cmdlinetips.com/2011/08/how-to-count-the-number-of-lines-words-and-characters-in-a-text-file-from-terminal/
+
+```
+cd ~
+ls -lah
+chmod 777 toilet
+cd toilet
+wc -l article
+wc -w article
+```
+
+#### 5.
+
+Flag: `NASA{MEOW_CAT}`
+
+Reference: B09前瞻營課程內容&手冊 https://stackoverflow.com/questions/18006581/how-to-append-contents-of-multiple-files-into-one-file
+
+```
+cd ~/cartoon
+ls -lah
+cat *
+cat flag0* flag1* flag2*
+cat flag2* flag3* flag4* flag5*
+```
+
+#### 6.
+
+Flag: `NASA{IM_SHERLOCKED}`
+
+Reference: B09前瞻營課程內容&手冊
+
+```
+cd ~/TW
+mkdir CSIE
+chmod 700 CSIE
+mv hide CSIE
+cd CSIE
+mkdir vote
+chmod 700 vote
+mv hide vote
+cd vote
+mkdir box
+chmod 700 box
+mv hide box
+./hide
+```
+
+#### 7.
+
+Flag: `NASA{grep_virus_nasa}`
+
+Refernce: B09前瞻營課程內容&手冊 http://benjr.tw/97395 https://www.cyberciti.biz/faq/grep-regular-expressions/
+
+```
+grep -E "NASA\{[[:alpha:]]+_virus_[[:alpha:]]+\}" flags
+```
+
+#### 8.
+
+Flag: `NASA{12402_0_1000000}`
+
+Reference: B09前瞻營課程內容&手冊 http://linux.vbird.org/linux_basic/0330regularex.php#sed_file
+
+```
+cd ~/nanasasa
+cp nasa_report clone_nasa_report
+sed -i 's/nasa/NASA/g' clone_nasa_report
+./test clone_nasa_report
+```
+
+#### 9.
+
+Flag: `NASA{UR_MAZ3_RUNN3R}`
+
+Reference: https://blog.gtwang.org/linux/unix-linux-find-command-examples/ https://stackoverflow.com/questions/3458461/find-file-then-cd-to-that-directory-in-linux
+
+```
+cd ~/maze
+find -name flag
+cd "$(dirname "$(find -name flag)")"
+ls
+cat flag
+```
+
+#### 10.
+
+Flag: `NASA{OBS3RV3_M3}`
+
+Reference: https://www.twblogs.net/a/5b7afe162b7177539c2499ab https://linuxize.com/post/vim-search/ https://blog.gtwang.org/useful-tools/how-to-use-vim-as-a-hex-editor/
+
+In terminal:
+
+```
+cd ~/image
+wget "$(cat url)"
+cp s1PiDl5.jpg cat_pic.jpg
+vim cat_pic.jpg
+```
+
+In vim:
+
+```
+:%! xxd
+/NA
+/SA
+```
+
+#### 11.
+
+Flag: `NASA{kill_-9_"$(pgrep_guineaPig)"}`
+
+Reference: B09前瞻營課程內容&手冊 https://blog.gtwang.org/linux/linux-howto-find-process-by-name/
+
+#### 12.
+
+Reference: https://david50.pixnet.net/blog/post/45252072-%5B%E7%AD%86%E8%A8%98%5Dlinux---top%E8%B3%87%E8%A8%8A https://stackoverflow.com/questions/17394356/how-can-i-make-a-bash-command-run-periodically http://linux.vbird.org/linux_basic/0430cron.php
+
+First, I use `top -o S` to see what processes are running, and I find out that the process that is printing the message is not constantly running (because the number of running processes is 1 most of the time).  Then, I use `crontab -l` to see if there are any scheduled jobs, and find the command is there (it's also the only one in the table). Finally, I use `crontab -r` to remove all the scheduled jobs. Problem solved!
+
+#### 13.
+
+Reference: https://unix.stackexchange.com/questions/6050/is-it-possible-to-stop-a-shutdown-command https://stackoverflow.com/questions/5050780/detect-pending-linux-shutdown https://unix.stackexchange.com/questions/56083/how-to-write-a-shell-script-that-gets-executed-on-login
+
+Since it's a auto shutdown, it's probably a script that runs at login or startup and schedules a shutdown.  First, I run `cat /run/systemd/shutdown/scheduled` to see if any shutdowns are scheduled, and there is one. Then I run `shutdown -c` to cancel it to fix the problem for now.
+
+Now, I want to find where the script or command is at. I check `~/.profile`,  `/etc/profile`, files under `/etc/profile.d` but nothing strange was there. Then I run `bash` and run `cat /run/systemd/shutdown/scheduled` in the newly started bash. A scheduled shutdown appears, so that means the command is in `~/.bashrc`. Finally run `vim ~/.bashrc`, `/ shutdown`, remove the line.
+
+#### 14.
+
+Reference: B09前瞻營課程內容&手冊 https://wiki.archlinux.org/index.php/File_permissions_and_attributes
+
+The `r`, `w`, and `x` mean different permissions as the table below.
+
+| Permissions | Meaning to a file              | Meaning to a directory                                       |
+| ----------- | ------------------------------ | ------------------------------------------------------------ |
+| r           | Permission to read the file    | Permission to show content of the directory                  |
+| w           | Permission to modify the file  | Permission to modify content of the directory (such as renaming files or folders, creating new files or folders) |
+| x           | Permission to execute the file | Permission to access the directory with `cd`                 |
+
+#### 15.
+
