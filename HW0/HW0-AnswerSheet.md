@@ -470,7 +470,7 @@ traceroute to 192.168.50.1 (192.168.50.1), 30 hops max, 60 byte packets
 
 #### 1.
 
-Flag: `NASA{echo_"$USER"}`, `NASA{id_-u_-n}`, `NASA{whoami}`
+Flag: `NASA{echo_$USER}`, `NASA{id_-u_-n}`, `NASA{whoami}`
 
 > Reference
 >
@@ -530,7 +530,7 @@ Flag: `NASA{MEOW_CAT}`
 > https://stackoverflow.com/questions/18006581/how-to-append-contents-of-multiple-files-into-one-file
 
 ```shell
-cd ~/cartoon
+cd ~/carton
 ls -lah
 cat *
 cat flag0* flag1* flag2*
@@ -540,7 +540,7 @@ cat flag2* flag3* flag4* flag5*
 or
 
 ```shell
-cd ~/cartoon
+cd ~/carton
 ls -lah
 cat * | more
 ```
@@ -568,6 +568,7 @@ cd vote
 mkdir box
 chmod 700 box
 mv hide box
+cd box
 ./hide
 ```
 
@@ -584,7 +585,15 @@ Flag: `NASA{grep_virus_nasa}`
 > https://www.cyberciti.biz/faq/grep-regular-expressions/
 
 ```shell
+cd ~
 grep -E "NASA\{[[:alpha:]]+_virus_[[:alpha:]]+\}" flags
+```
+
+or
+
+```shell
+cd ~
+cat flags | grep -E "[[:alpha:]]+_virus_" | grep -E "_virus_[[:alpha:]]+"
 ```
 
 
@@ -601,9 +610,9 @@ Flag: `NASA{12402_0_1000000}`
 
 ```shell
 cd ~/nanasasa
-cp nasa_report clone_nasa_report
-sed -i 's/nasa/NASA/g' clone_nasa_report
-./test clone_nasa_report
+cp nasa_report clone
+sed -i 's/nasa/NASA/g' clone
+./test clone
 ```
 
 
@@ -621,9 +630,7 @@ Flag: `NASA{UR_MAZ3_RUNN3R}`
 ```shell
 cd ~/maze
 find -name flag
-cd "$(dirname "$(find -name flag)")"
-ls
-cat flag
+cat $(find -name flag)
 ```
 
 
@@ -633,6 +640,8 @@ cat flag
 Flag: `NASA{0BS3RV3_M3}`
 
 > Reference
+>
+> 陳可邦 林弘毅
 >
 > https://www.twblogs.net/a/5b7afe162b7177539c2499ab
 >
@@ -644,9 +653,9 @@ In bash:
 
 ```shell
 cd ~/image
-wget "$(cat url)"
-cp s1PiDl5.jpg cat_pic.jpg
-vim cat_pic.jpg
+cat url
+wget $(cat url) -O pic.jpg
+vim pic.jpg
 ```
 
 In vim:
@@ -657,11 +666,20 @@ In vim:
 /SA
 ```
 
+or without vim
+
+```
+cd ~/image
+cat url
+wget $(cat url) -O pic.jpg
+strings pic.jpg | grep NASA
+```
+
 
 
 #### 11.
 
-Flag: `NASA{kill_-9_"$(pgrep_guineaPig)"}`, `NASA{pkill_-9_guineaPig}`
+Flag: `NASA{kill_-9_$(pgrep_guineaPig)}`, `NASA{pkill_-9_guineaPig}`
 
 > Reference
 >
@@ -670,6 +688,8 @@ Flag: `NASA{kill_-9_"$(pgrep_guineaPig)"}`, `NASA{pkill_-9_guineaPig}`
 > B09前瞻營課程內容&手冊
 >
 > https://blog.gtwang.org/linux/linux-howto-find-process-by-name/
+
+After running `guineaPig`, first press `ctrl`+`z` to stop the process. Then apply the command to kill the process.
 
 
 
@@ -699,7 +719,7 @@ First, I use `top -o S` to see what processes are running, and I find out that t
 
 Since it's a auto shutdown, it's probably a script that runs at login or startup and schedules a shutdown.  First, I run `cat /run/systemd/shutdown/scheduled` to see if any shutdowns are scheduled, and there is one. Then I run `shutdown -c` to cancel it to fix the problem for now.
 
-Now, I want to find where the script or command is at. I check `~/.profile`,  `/etc/profile`, files under `/etc/profile.d` but nothing strange was there. Then I run `bash` and run `cat /run/systemd/shutdown/scheduled` in the newly started bash. A scheduled shutdown appears, so that means the command is in `~/.bashrc`. Finally run `vim ~/.bashrc`, `/ shutdown`, remove the line.
+Now, I want to find where the script or command is at. I check `~/.profile`,  `/etc/profile`, files under `/etc/profile.d` but nothing strange was there. Then I run `bash` and run `cat /run/systemd/shutdown/scheduled` in the newly started bash. A scheduled shutdown appears, so that means the command is in `~/.bashrc`. Finally run `vim ~/.bashrc`, `/shutdown`, remove the line, save and exit.
 
 
 
