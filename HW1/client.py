@@ -41,24 +41,24 @@ def decmps(host_msg):
     msg_copy = msg_list.copy()
     if msg_list[0][:4] == "give":
         msg_list.pop(0)
-    try:
-        block_x = msg_list[0]
-        block_y = msg_list[1]
-        ball_x = msg_list[2]
-        ball_y = msg_list[3]
-        cnt = msg_list[4]
-    except:
-        print(msg_list)
-        print(msg_copy)
-    try:
-        block_x = int(block_x.split(" ")[1])
-        block_y = int(block_y.split(" ")[1])
-        ball_x = [int(i) for i in ball_x.split(" ") if i != "ballx:"]
-        ball_y = [int(i) for i in ball_y.split(" ") if i != "bally:"]
-        cnt = cnt.split(" ")[1]
-    except:
-        print(msg_list)
-        print(msg_copy)
+    # try:
+    block_x = msg_list[0]
+    block_y = msg_list[1]
+    ball_x = msg_list[2]
+    ball_y = msg_list[3]
+    cnt = msg_list[4]
+    # except:
+        # print(msg_list)
+        # print(msg_copy)
+    # try:
+    block_x = int(block_x.split(" ")[1])
+    block_y = int(block_y.split(" ")[1])
+    ball_x = [int(i) for i in ball_x.split(" ") if i != "ballx:"]
+    ball_y = [int(i) for i in ball_y.split(" ") if i != "bally:"]
+    cnt = cnt.split(" ")[1]
+    # except:
+    #     print(msg_list)
+    #     print(msg_copy)
     return block_x, block_y, ball_x, ball_y, cnt
 
 win = "win"
