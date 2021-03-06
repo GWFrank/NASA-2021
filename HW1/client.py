@@ -19,7 +19,6 @@ MAX_Y = 21
 MAX_X = 34
 
 def moveX(step):
-    # print("x:", step)
     if step > 0:
         move_str = move + right + break_line
         client.sendall(move_str.encode())
@@ -28,7 +27,6 @@ def moveX(step):
         client.sendall(move_str.encode())
 
 def moveY(step):
-    # print("y:", step)
     if step > 0:
         move_str = move + down + break_line
         client.sendall(move_str.encode())
@@ -38,28 +36,15 @@ def moveY(step):
 
 def decmps(host_msg):
     msg_list = host_msg.split("\n")
-    msg_copy = msg_list.copy()
-    if msg_list[0][:4] == "give":
-        msg_list.pop(0)
-    # try:
     block_x = msg_list[0]
     block_y = msg_list[1]
     ball_x = msg_list[2]
     ball_y = msg_list[3]
-    cnt = msg_list[4]
-    # except:
-        # print(msg_list)
-        # print(msg_copy)
-    # try:
     block_x = int(block_x.split(" ")[1])
     block_y = int(block_y.split(" ")[1])
     ball_x = [int(i) for i in ball_x.split(" ") if i != "ballx:"]
     ball_y = [int(i) for i in ball_y.split(" ") if i != "bally:"]
-    cnt = cnt.split(" ")[1]
-    # except:
-    #     print(msg_list)
-    #     print(msg_copy)
-    return block_x, block_y, ball_x, ball_y, cnt
+    return block_x, block_y, ball_x, ball_y
 
 win = "win"
 lose = "lose"
@@ -75,12 +60,8 @@ while True:
         break
     if server_msg[:4] == "give":
         continue    
-    block_x, block_y, ball_x, ball_y, cnt = decmps(server_msg)
-    # print("--------------") 
-    # print("block (", block_x, ",", block_y, ")")
-    # for i in range(len(ball_x)):
-    #    print("ball", i, "(", ball_x[i], ",", ball_y[i], ")")
-    
+    block_x, block_y, ball_x, ball_y = decmps(server_msg)
+
     # for default and fast mode
     # moveX(ball_x[0] - block_x)
     # moveY(ball_y[0] - block_y)
@@ -99,9 +80,5 @@ while True:
     else:
         idx = ball_y.index(max(ball_y))
         moveX(ball_x[idx] - block_x)
-    
-    # print("countdown: ", cnt)
-    # print("--------------") 
-    
 
 client.close()
