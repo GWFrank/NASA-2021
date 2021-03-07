@@ -310,3 +310,19 @@ DHCP works on application layer. A DHCP server automatically offers parameters f
 
 -----
 
+
+
+## System Administration
+
+> Reference:
+>
+> http://linux.vbird.org/linux_basic/0340bashshell-scripts.php
+>
+> https://blog.techbridge.cc/2019/11/15/linux-shell-script-tutorial/
+>
+> https://gary840227.medium.com/linux-bash-array-%E4%BB%8B%E7%B4%B9-6e30ffe87978
+>
+> https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
+>
+> 
+
