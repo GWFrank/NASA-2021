@@ -24,37 +24,44 @@ files=()
 
 while [ ${#@} -gt 0 ]; do
     case $1 in
-        "-h")
+        "-h"|"--help")
             echo -ne "${helpMsg}"
             exit 1
         ;;
-        "-e")
+        "-e"|"--exec")
             shift
             cmd="$1"
             shift
         ;;
-        "-f")
+        "-f"|"--file")
             shift
             target="$1"
             shift
         ;;
-        "-c")
+        "-c"|"--component")
             shift
             comp=1
         ;;
-        "-t")
+        "-t"|"threshold")
             shift
             thres="$1"
             shift
         ;;
-        "-u")
+        "-u"|"--url")
             shift
             url="$1"
             shift
         ;;
         *)
-            file_re=""
-            break
+            file_re1="^[a-zA-Z0-9_/]+\.[a-zA-Z0-9_]+$"
+            file_re2="^[\.]{0, 2}/[a-zA-Z0-9_/]+\.[a-z]+$"
+            if [[ "$1" =~ "$file_re1" ]] || [[ "$1" =~ "$file_re2" ]]; then
+                files+=("$1")
+                shift
+            else
+                echo "Invalid argument ${1}. Try -h or –help for more help"
+                exit 1
+            fi
         ;;
     esac
 done
