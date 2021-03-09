@@ -8,17 +8,29 @@ validator(){
     # store each line into an array and determine if the number of element in the array is 3
     # TODO: 1. store the $input, separated by linefeed, into an array $lines
     #       2. if the number of element in the array is not 3, return 1 (invalid)
-    readarray -t lines <<<"$input"
-    if [ "${lines[@]}" != 3 ]; then
+    lines=()
+    while read -r line && test -n "$line"; do
+        lines+=("$line")
+    done <<< "$input"
+    if [[ "${#lines[@]}" != 3 ]]; then
         return 1
     fi
     # ENDTODO
     # check the first line: a valid student id (without any leading or trailing space)
     # TODO: determine whether the first element of $lines matches a valid student id, if not, return 1
-    if [[ "${lines[0]}" =~ '^[BRD]' ]]; then
-        letter='lower'
-    elif [[ "${lines[0]}" =~ '^[brd]' ]]; then
+    echo "${lines[0]}"
+    # echo "${lines[0]:0:1}"
+    letter='unknown'
+    # upper_re='^[BRD].*'
+    upper_re='^[B|D|R]'
+    lower_re='^[brd].*'
+    
+    if [[ "${lines[0]:0:1}" =~ "${upper_re}" ]]; then
         letter='upper'
+        echo "$letter"
+    elif [[ "${lines[0]}" =~ "${lower_re}" ]]; then
+        letter='lower'
+        echo "$letter"
     fi
     
     sid_re='^[BRDbrd]0[1-9][1-9ABab][0-9]{5}$'
@@ -30,6 +42,8 @@ validator(){
             return 1
         fi
     else
+        # echo "${lines[0]}"
+        echo "invalid"
         return 1
     fi
     # ENDTODO
@@ -71,7 +85,8 @@ num=$1; gen=$2; sol=$3; ans=$4; tle=$5; mle=$6; ole=$7
 #       2. create a temporary directory at the current directory and store its path to $tmpdir (hint: `man mktemp`)
 mle=$(($mle*1024))
 ole=$(($ole*1024))
-tmpdir=`mktemp -d -p`
+tmpdir=`mktemp -d -p .`
+
 # ENDTODO
 # set trap on exit: auto remove the temporary directory when exit
 trap '{ rm -rf "$tmpdir"; }' EXIT
@@ -103,7 +118,8 @@ do
     #       3. extract $user_time and $sys_time from $time_res and remove their decimal separator (i.e. multiply 100)
     #       4. extract $mem_use from $time_res (the 'Maximum resident set size' section)
     #       5. calculate $tot_time to be the sum of $user_time and $sys_time (hint: specify decimal base)
-
+    echo "$tmpdir"
+    cat "${tmpdir}/sol.err"
     # ENDTODO
     # get the output length
     out_size=$(cat "$tmpdir/sol.out" | wc -c)
