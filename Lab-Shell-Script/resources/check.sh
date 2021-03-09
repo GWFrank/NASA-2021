@@ -18,23 +18,18 @@ validator(){
     # ENDTODO
     # check the first line: a valid student id (without any leading or trailing space)
     # TODO: determine whether the first element of $lines matches a valid student id, if not, return 1
-    echo "${lines[0]}"
-    # echo "${lines[0]:0:1}"
     letter='unknown'
-    # upper_re='^[BRD].*'
-    upper_re='^[B|D|R]'
+    upper_re='^[BRD].*'
     lower_re='^[brd].*'
     
-    if [[ "${lines[0]:0:1}" =~ "${upper_re}" ]]; then
+    if [[ "${lines[0]}" =~ ${upper_re} ]]; then
         letter='upper'
-        echo "$letter"
-    elif [[ "${lines[0]}" =~ "${lower_re}" ]]; then
+    elif [[ "${lines[0]}" =~ ${lower_re} ]]; then
         letter='lower'
-        echo "$letter"
     fi
-    
+
     sid_re='^[BRDbrd]0[1-9][1-9ABab][0-9]{5}$'
-    if [[ "${lines[0]}" =~ "${sid_re}" ]]; then
+    if [[ "${lines[0]}" =~ ${sid_re} ]]; then
         if [[ "${lines[0]:3:1}" =~ '[AB]' ]] && [[ "$letter" == 'lower' ]]; then
             return 1
         fi
@@ -42,15 +37,13 @@ validator(){
             return 1
         fi
     else
-        # echo "${lines[0]}"
-        echo "invalid"
         return 1
     fi
     # ENDTODO
     # check the second line: an integer N in range 1 to 100 (without any leading or trailing space)
     # TODO: determine whether the second element of $lines is a valid integer, if not, return 1
     num_re="^[0-9]+$"
-    if [[ ! "${lines[1]}" =~ "${num_re}" ]]; then
+    if [[ ! "${lines[1]}" =~ ${num_re} ]]; then
         return 1
     fi
     # ENDTODO
@@ -59,14 +52,14 @@ validator(){
     # TODO: 1. fill the $float_regex with a regex that matches a single valid floating number
     #       2. let $tot_regex = "^$float_regex" + " $float_regex"*(N-1) + '$'
     #       3. determine whether the third element of $lines matches the regex $tot_regex, if not, return 1
-    float_regex='^[+-]?[0-9]*\.?[0-9]{0,6}$'
-    tot_regex=''
+    float_regex='[+-]?[0-9]*\.?[0-9]{0,6}'
+    tot_regex="^${float_regex}"
     for((i=0;i<N-1;i++)); do
-        tot_regex+="${float_regex}"
+        tot_regex+=" ${float_regex}"
     done
     tot_regex+='$'
 
-    if [[ ! "${lines[2]}" =~ "${tot_regex}" ]]; then
+    if [[ ! "${lines[2]}" =~ ${tot_regex} ]]; then
         return 1
     fi
     # ENDTODO
@@ -118,14 +111,48 @@ do
     #       3. extract $user_time and $sys_time from $time_res and remove their decimal separator (i.e. multiply 100)
     #       4. extract $mem_use from $time_res (the 'Maximum resident set size' section)
     #       5. calculate $tot_time to be the sum of $user_time and $sys_time (hint: specify decimal base)
-    echo "$tmpdir"
-    cat "${tmpdir}/sol.err"
+    
+    time_st='false'
+    time_res_re='Command being timed:'
+    time_res=''
+    line_cnt=0
+    user_time=''
+    user_time_re='User time'
+    sys_time=''
+    sys_time_re='System time'
+    mem_use=''
+    mem_use_re='Maximum resident set size'
+    while read -r line; do
+        if [[ "$line" =~ ${time_res_re} ]]; then
+            time_st='true'
+        fi
+        if [[ "$line" =~ ${user_time_re} ]]; then
+            user_time=`echo ${line} | cut -d ' ' -f 4 | sed 's/\.//g'`
+        elif [[ "$line" =~ ${sys_time_re} ]]; then
+            sys_time=`echo ${line} | cut -d ' ' -f 4 | sed 's/\.//g'`
+            # sys_time=`echo "${sys_time}*100" | bc`
+        elif [[ "$line" =~ ${mem_use_re} ]]; then
+            mem_use=`echo ${line} | cut -d ' ' -f 6`
+        fi
+        if [[ "$time_st" == 'true' ]]; then
+            time_res+="${line}\n"
+            line_cnt=$((${line_cnt}+1))
+        fi
+    done < "$tmpdir/sol.err"
+    # if [ $id == 2 ]; then
+    #     # cat "$tmpdir/sol.err"
+    #     # s=`head -n -${line_cnt} "$tmpdir/sol.err"`
+    #     # head -n -${line_cnt} "$tmpdir/sol.err"
+    # fi
+    tot_time=$((10#${user_time}+10#${sys_time}))
+    tmp=`head -n -${line_cnt} "$tmpdir/sol.err"`
+    echo -e "$tmp" > "$tmpdir/sol.err"
     # ENDTODO
     # get the output length
     out_size=$(cat "$tmpdir/sol.out" | wc -c)
     # determine the verdict according to the result
     if ((tot_time>tle*100)); then
-       verdict=TLE
+        verdict=TLE
     elif ((mem_use>mle)); then
         verdict=MLE
     elif [[ $out_size -gt $ole ]]; then
@@ -135,6 +162,9 @@ do
     elif ! diff "$tmpdir/ans.out" "$tmpdir/sol.out" &> /dev/null; then
         verdict=WA
     elif ! diff "$tmpdir/ans.err" "$tmpdir/sol.err" &> /dev/null; then
+        echo "$id wrong"
+        cat "$tmpdir/ans.err"
+        cat "$tmpdir/sol.err"
         verdict=WA
     else
         verdict=AC
@@ -143,6 +173,18 @@ do
     # TODO: 1. append $verdict to $verdict_arr, $tot_time to $time_arr, and $mem_use to $mem_arr
     #       2. if $verdict is not AC, set $res_verdict to 'Rejected'
     #       3. set $max_time=max($max_time,$tot_time), $max_mem=max($max_mem,$mem_use)
+    verdict_arr+=("${verdict}")
+    time_arr+=("${tot_time}")
+    mem_arr+=("${mem_use}")
+    if [[ "$verdict" != "AC" ]]; then
+        res_verdict='Rejected'
+    fi
+    if [ "${tot_time}" -gt "${max_time}" ]; then
+        max_time="$tot_time"
+    fi
+    if [ "${mem_use}" -gt "${max_mem}" ]; then
+        max_mem="$tot_mem"
+    fi
 
     # ENDTODO
 done
@@ -153,6 +195,8 @@ echo
 # print detailed result of each subtask
 for((id=0;id<num;id++)); do
     # TODO: print the $id element of $verdict_arr, $time_arr, and $mem_arr according to the output format
-
+    time_f=`echo "scale=2;${time_arr[$id]}/100" | bc`
+    mem_f=`echo "scale=3;${mem_arr[$id]}/1024" | bc` 
+    printf "%3d: %-8s %2.2fs %3.3fMB\n" ${id} ${verdict_arr[$id]} ${time_f} ${mem_f}
     # ENDTODO
 done
