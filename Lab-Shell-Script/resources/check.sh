@@ -89,6 +89,9 @@ res_verdict=Accepted; max_time=0; max_mem=0
 # Run the tests $num times
 for((id=0;id<$num;id++))
 do
+    if [[ $id == 13 ]]; then
+        echo "$input"
+    fi
     echo "running testcase$id..." >&2
     # run the generator and store its output (the testdata input) at $tmpdir/input
     "$gen" "$id" "$8" > "$tmpdir/input" 2> /dev/null
@@ -111,7 +114,6 @@ do
     #       3. extract $user_time and $sys_time from $time_res and remove their decimal separator (i.e. multiply 100)
     #       4. extract $mem_use from $time_res (the 'Maximum resident set size' section)
     #       5. calculate $tot_time to be the sum of $user_time and $sys_time (hint: specify decimal base)
-    
     time_st='false'
     time_res_re='Command being timed:'
     time_res=''
@@ -139,11 +141,6 @@ do
             line_cnt=$((${line_cnt}+1))
         fi
     done < "$tmpdir/sol.err"
-    # if [ $id == 2 ]; then
-    #     # cat "$tmpdir/sol.err"
-    #     # s=`head -n -${line_cnt} "$tmpdir/sol.err"`
-    #     # head -n -${line_cnt} "$tmpdir/sol.err"
-    # fi
     tot_time=$((10#${user_time}+10#${sys_time}))
     tmp=`head -n -${line_cnt} "$tmpdir/sol.err"`
     echo -e "$tmp" > "$tmpdir/sol.err"
@@ -183,9 +180,8 @@ do
         max_time="$tot_time"
     fi
     if [ "${mem_use}" -gt "${max_mem}" ]; then
-        max_mem="$tot_mem"
+        max_mem="$mem_use"
     fi
-
     # ENDTODO
 done
 # print the final result and the seperator line
