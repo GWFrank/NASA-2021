@@ -55,7 +55,7 @@ while [ ${#@} -gt 0 ]; do
         *)
             file_re1="^[a-zA-Z0-9_/]+\.[a-zA-Z0-9_]+$"
             file_re2="^[\.]{0, 2}/[a-zA-Z0-9_/]+\.[a-z]+$"
-            if [[ "$1" =~ "$file_re1" ]] || [[ "$1" =~ "$file_re2" ]]; then
+            if [[ "$1" =~ $file_re1 ]] || [[ "$1" =~ $file_re2 ]]; then
                 files+=("$1")
                 shift
             else
@@ -90,7 +90,7 @@ fi
 # validity check 3
 # exit if thres isn't a number or isn't within 0 to 100
 num_re="^[0-9]+$"
-if [[ "$thres" =~ "$num_re" ]]; then
+if [[ "$thres" =~ $num_re ]]; then
     if [ ! $thres -le 100 ] || [ ! $thres -ge 0 ]; then
         echo "Threshold value should be an integer within 0 to 100."
         exit 1

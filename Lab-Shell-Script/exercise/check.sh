@@ -9,12 +9,13 @@ validator(){
     # TODO: 1. store the $input, separated by linefeed, into an array $lines
     #       2. if the number of element in the array is not 3, return 1 (invalid)
     lines=()
-    while read -r line && test -n "$line"; do
+    IFS=''; while read line && test -n "$line"; do
         lines+=("$line")
     done <<< "$input"
     if [[ "${#lines[@]}" != 3 ]]; then
         return 1
     fi
+    echo "${lines[0]} " >> "id_input.txt"
     # ENDTODO
     # check the first line: a valid student id (without any leading or trailing space)
     # TODO: determine whether the first element of $lines matches a valid student id, if not, return 1
@@ -30,10 +31,12 @@ validator(){
 
     sid_re='^[BRDbrd]0[1-9][1-9ABab][0-9]{5}$'
     if [[ "${lines[0]}" =~ ${sid_re} ]]; then
-        if [[ "${lines[0]:3:1}" =~ '[AB]' ]] && [[ "$letter" == 'lower' ]]; then
+        # echo "$letter" >> "id_input.txt"
+        # echo 
+        if [[ "${lines[0]:3:1}" =~ [AB] ]] && [[ "$letter" == 'lower' ]]; then
             return 1
         fi
-        if [[ "${lines[0]:3:1}" =~ '[ab]' ]] && [[ "$letter" == 'upper' ]]; then
+        if [[ "${lines[0]:3:1}" =~ [ab] ]] && [[ "$letter" == 'upper' ]]; then
             return 1
         fi
     else
@@ -58,8 +61,17 @@ validator(){
         tot_regex+=" ${float_regex}"
     done
     tot_regex+='$'
-
     if [[ ! "${lines[2]}" =~ ${tot_regex} ]]; then
+        return 1
+    fi
+    invalid_re1=' [+-] '
+    invalid_re2=' \. '
+    invalid_re3='^[+-]$'
+    invalid_re4='^\.$'
+    if [[ "${lines[2]}" =~ ${invalid_re1} ]]\
+    || [[ "${lines[2]}" =~ ${invalid_re2} ]]\
+    || [[ "${lines[2]}" =~ ${invalid_re3} ]]\
+    || [[ "${lines[2]}" =~ ${invalid_re4} ]]; then
         return 1
     fi
     # ENDTODO
@@ -79,7 +91,6 @@ num=$1; gen=$2; sol=$3; ans=$4; tle=$5; mle=$6; ole=$7
 mle=$(($mle*1024))
 ole=$(($ole*1024))
 tmpdir=`mktemp -d -p .`
-
 # ENDTODO
 # set trap on exit: auto remove the temporary directory when exit
 trap '{ rm -rf "$tmpdir"; }' EXIT
@@ -89,15 +100,12 @@ res_verdict=Accepted; max_time=0; max_mem=0
 # Run the tests $num times
 for((id=0;id<$num;id++))
 do
-    if [[ $id == 13 ]]; then
-        echo "$input"
-    fi
     echo "running testcase$id..." >&2
     # run the generator and store its output (the testdata input) at $tmpdir/input
     "$gen" "$id" "$8" > "$tmpdir/input" 2> /dev/null
     # read the testdata content (prevent from command substitution removing trailing newline)
     IFS= read -rd '' input < <(cat "$tmpdir/input")
-    # run the validator function to validate the testdata
+    # run the validator function to validate the testdat
     if ! validator "$input"; then
         verdict_arr+=(JE); time_arr+=(0); mem_arr+=(0)
         continue
@@ -159,9 +167,6 @@ do
     elif ! diff "$tmpdir/ans.out" "$tmpdir/sol.out" &> /dev/null; then
         verdict=WA
     elif ! diff "$tmpdir/ans.err" "$tmpdir/sol.err" &> /dev/null; then
-        echo "$id wrong"
-        cat "$tmpdir/ans.err"
-        cat "$tmpdir/sol.err"
         verdict=WA
     else
         verdict=AC
