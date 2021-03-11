@@ -1,0 +1,29 @@
+Template
+./p1.sh -h -e cmd -f target -c -t thres -u url files
+
+test help
+./p1.sh -h
+
+test check 1
+./p1.sh -f target-file -c -t 10 file1 file2 file3
+
+test check 2
+./p1.sh -f unreadable -c -t 10 -u example.com file1 file2
+
+test check 3
+./p1.sh -e ./client -f ../answersheet.md -c -t 101 file1 file2
+
+test check 4
+./p1.sh -e ./client -f ../answersheet.md -c -t 10
+
+test check 5
+./p1.sh -e ./client -f ../answersheet.md -c -t 10 file1 file2 unreadable
+
+correct
+./p1.sh -e ./client -f ../answersheet.md -t 0 file1 file2
+
+-e cmd -f target -c -t thres -u url file1 file2
+
+=======================
+
+./p2.sh ./client$ $ 0 $ file1 file2

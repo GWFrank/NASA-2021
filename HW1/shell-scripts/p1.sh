@@ -53,9 +53,10 @@ while [ ${#@} -gt 0 ]; do
             shift
         ;;
         *)
-            file_re1="^[a-zA-Z0-9_/]+\.[a-zA-Z0-9_]+$"
-            file_re2="^[\.]{0, 2}/[a-zA-Z0-9_/]+\.[a-z]+$"
-            if [[ "$1" =~ $file_re1 ]] || [[ "$1" =~ $file_re2 ]]; then
+            file_re1="^[a-zA-Z0-9_\/]+\.[a-zA-Z0-9_]+$|^\.{0,2}\/[a-zA-Z0-9_\/]+\.[a-z]+$"
+            file_re2="^[a-zA-Z0-9_\/]+$|^\.{0,2}\/[a-zA-Z0-9_\/]+$"
+            if [[ "$1" =~ $file_re1 ]]\
+            || [[ "$1" =~ $file_re2 ]]; then
                 files+=("$1")
                 shift
             else
@@ -102,7 +103,7 @@ fi
 
 # validity check 4
 # exit if no files
-if [ ${#@} == 0 ]; then
+if [ ${#files[@]} == 0 ]; then
     echo -ne "Require at least one file to be tested similarity.\nTry -h or –help for\
  more help.\n"
     exit 1
@@ -110,7 +111,7 @@ fi
 
 # validity check 5
 # exit if file in files is invalid
-for filename in "$files"; do
+for filename in "${files[@]}"; do
     if test ! -e "$filename"; then
         echo "File $filename does not exist or is not a readable regular file."
         exit 1
@@ -118,12 +119,12 @@ for filename in "$files"; do
         echo "File $filename does not exist or is not a readable regular file."
         exit 1
     fi
-
+done
 
 echo "cmd=${cmd}"
 echo "target=${target}"
 echo "comp=${comp}"
 echo "thres=${thres}"
 echo "url=${url}"
-echo "files=($@)"
+echo "files=(${files[@]})"
 # echo -e ${helpMsg}

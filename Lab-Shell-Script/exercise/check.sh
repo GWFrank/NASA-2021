@@ -150,7 +150,7 @@ do
         fi
     done < "$tmpdir/sol.err"
     tot_time=$((10#${user_time}+10#${sys_time}))
-    tmp=`head -n -${line_cnt} "$tmpdir/sol.err"`
+    tmp=`tail -n ${line_cnt} "$tmpdir/sol.err"`
     echo -e "$tmp" > "$tmpdir/sol.err"
     # ENDTODO
     # get the output length
