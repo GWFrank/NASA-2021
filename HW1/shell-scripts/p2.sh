@@ -10,8 +10,41 @@ url=`echo "$1" | sed  's/\$$//g'`
 shift
 files=$@
 
-cur_dir=`pwd`
-cur_par_dir="$(dirname "$cur_dir")"
+cur_dir='`pwd`/'
+cur_par_dir="$(dirname "$cur_dir")/"
+
+# replace '.' and '..'
+target=`echo "$target" | sed "s/\.\.\//${cur_par_dir}/g" | sed "s/\.\//${cur_dir}/g"`
+for((i=0;i<${#files[@]};i++)); do
+    files[$i]=`echo "${files[$i]}" | sed "s/\.\.\//${cur_par_dir}/g" | sed "s/\.\//${cur_dir}/g"`
+done
+# replace relative path with absolute path
+abs_re='^/'
+if [[ ! "$target" =~ $abs_re ]]; then
+    target="${cur_dir}/${target}"
+fi
+for((i=0;i<${#files[@]};i++)); do
+    if [[ ! "${files[$i]}" =~ $abs_re ]]; then
+        files[$i]="${cur_dir}/${files[$i]}"
+    fi
+done
+
+# check if target is provided
+if test -n target; then
+    target_provided='True'
+else
+    target_provided='False'
+fi
+
+# check if all files are in the same directory
+dir_name="$(dirname "${files[0]}")"
+same_dir='True'
+for f in ${files[@]}; do
+    if [[ "$(dirname "$i")" != dir_name ]]; then
+        same_dir='False'
+        break
+    fi
+done
 
 # check if url is provided. if url isn't provided, use $cmd to get url
 if test -z "$url"; then
@@ -55,6 +88,12 @@ while read line && [[ "$line" != '</TABLE>' ]]; do
         ratio2=`echo "$line" | sed 's/^.* (//g' | sed 's/%.*$//g'`
     elif [[ "$line" =~ $lines_re ]]; then
         line_cnt=`echo "$line" | sed 's/^<TD ALIGN=right>//g'`
+        # if target is provided and none of the file is target, don't save result
+        if [[ "$target_provided" == 'True' ]]; then
+            if [[ "$file1" != "$target" ]] && [[ "$file2" != "$target" ]]; then
+                continue
+            fi
+        fi
         # add data to array when read the line containing "lines matched"
         score=$(((7*${ratio1} + 7*${ratio1} + 3*${line_cnt})/20))
         if [[ $score -gt 100 ]]; then # min(score, 100)
