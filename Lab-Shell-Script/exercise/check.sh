@@ -15,7 +15,6 @@ validator(){
     if [[ "${#lines[@]}" != 3 ]]; then
         return 1
     fi
-    echo "${lines[0]} " >> "id_input.txt"
     # ENDTODO
     # check the first line: a valid student id (without any leading or trailing space)
     # TODO: determine whether the first element of $lines matches a valid student id, if not, return 1
@@ -150,7 +149,7 @@ do
         fi
     done < "$tmpdir/sol.err"
     tot_time=$((10#${user_time}+10#${sys_time}))
-    tmp=`tail -n ${line_cnt} "$tmpdir/sol.err"`
+    tmp=`head -n -${line_cnt} "$tmpdir/sol.err"`
     echo -e "$tmp" > "$tmpdir/sol.err"
     # ENDTODO
     # get the output length
