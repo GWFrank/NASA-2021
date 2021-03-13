@@ -324,5 +324,5 @@ DHCP works on application layer. A DHCP server automatically offers parameters f
 >
 > https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 >
-> 
+> and many many pages that i forgot to put in here
 
