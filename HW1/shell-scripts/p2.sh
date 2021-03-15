@@ -39,7 +39,7 @@ done
 
 # check if url is provided. if url isn't provided, use $cmd to get url
 if test -z "$url"; then
-    output=`${cmd} ${files[@]}`
+    output=`${cmd} ${target} ${files[@]}`
     prev_status="$?"
     if [[ "${prev_status}" != "0" ]]; then
         echo "Error when running ${cmd}."

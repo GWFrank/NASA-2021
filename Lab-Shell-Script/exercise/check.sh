@@ -54,12 +54,16 @@ validator(){
     # TODO: 1. fill the $float_regex with a regex that matches a single valid floating number
     #       2. let $tot_regex = "^$float_regex" + " $float_regex"*(N-1) + '$'
     #       3. determine whether the third element of $lines matches the regex $tot_regex, if not, return 1
-    float_regex='[+-]?[0-9]*\.?[0-9]{0,6}'
+    # float_regex='[+-]?[0-9]*\.?[0-9]{0,6}'
+    float_regex='([+-]?[0-9]+\.?|[+-]?[0-9]*\.[0-9]{1,6})'
     tot_regex="^${float_regex}"
     for((i=0;i<N-1;i++)); do
-        tot_regex+=" ${float_regex}"
+        tot_regex+="( ${float_regex})"
     done
     tot_regex+='$'
+    echo "${N}" >> regex.txt
+    echo "${tot_regex}" >> regex.txt
+    echo "${lines[2]}" >> regex.txt
     if [[ ! "${lines[2]}" =~ ${tot_regex} ]]; then
         return 1
     fi
@@ -67,12 +71,14 @@ validator(){
     invalid_re2=' \. '
     invalid_re3='^[+-]$'
     invalid_re4='^\.$'
+    # invalid_re5='  '
     if [[ "${lines[2]}" =~ ${invalid_re1} ]]\
     || [[ "${lines[2]}" =~ ${invalid_re2} ]]\
     || [[ "${lines[2]}" =~ ${invalid_re3} ]]\
     || [[ "${lines[2]}" =~ ${invalid_re4} ]]; then
         return 1
     fi
+    echo "pass" >> regex.txt
     # ENDTODO
     # pass all the check, return 0 (valid)
     return 0
@@ -109,6 +115,9 @@ do
         verdict_arr+=(JE); time_arr+=(0); mem_arr+=(0)
         continue
     fi
+    echo "----- case $id -----" >> input.txt
+    echo -ne "$input" >> input.txt
+    echo -ne ''
     # run the answer executable to get the correct answer
     "$ans" < "$tmpdir/input" > "$tmpdir/ans.out" 2> "$tmpdir/ans.err"
     ans_stat=$?
