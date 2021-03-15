@@ -1,0 +1,27 @@
+mixed
+./check.sh 20 ./gen ./sol ./ans 2 32 32 998244353 2> /dev/null
+
+JE
+./check.sh 15 ./gen ./sol ./ans 2 32 32 998244353allJE 2> /dev/null
+./check.sh 1000 ./gen ./sol ./ans 2 32 32 998244353allJE 2> /dev/null | grep -v 'JE'
+
+AC
+./check.sh 20 ./gen ./sol ./ans 2 32 32 998244353allAC 2> /dev/null
+
+WA
+./check.sh 20 ./gen ./sol ./ans 2 32 32 998244353allWA 2> /dev/null
+
+RE
+./check.sh 20 ./gen ./sol ./ans 2 32 32 998244353allRE 2> /dev/null
+
+TLE
+./check.sh 10 ./gen ./sol ./ans 2 32 32 880301allTLE 2> /dev/null
+./check.sh 10 ./gen ./sol ./ans 6 32 32 880301allTLE 2> /dev/null
+
+MLE
+./check.sh 10 ./gen ./sol ./ans 4 64 32 998244353allMLE 2> /dev/null
+./check.sh 10 ./gen ./sol ./ans 4 512 32 998244353allMLE 2> /dev/null
+
+OLE
+./check.sh 10 ./gen ./sol ./ans 2 64 64 998244353allOLE 2> /dev/null
+./check.sh 10 ./gen ./sol ./ans 2 64 2048 998244353allOLE 2> /dev/null
