@@ -127,35 +127,10 @@ if [[ ${#result_arr[@]} -eq 0 ]]; then
 fi
 
 # sort data
-# -score, -ratio1, -ratio2, -lines, file1, file2
-key_order=(3 1)
-for k in ${key_order[@]}; do
-    for((i=0; i<${#result_arr[@]}; i++)); do
-        for((j=i+1; j<${#result_arr[@]}; j++)); do
-            data_i=`echo "${result_arr[$i]}" | cut -d ' ' -f "$k"`
-            data_j=`echo "${result_arr[$j]}" | cut -d ' ' -f "$k"`
-            if [[ "${data_i}" > "${data_j}" ]]; then
-                tmp="${result_arr[$i]}"
-                result_arr[$i]="${result_arr[$j]}"
-                result_arr[$j]="$tmp"
-            fi
-        done
-    done
-done
-key_order=(5 4 2 6)
-for k in ${key_order[@]}; do
-    for((i=0; i<${#result_arr[@]}; i++)); do
-        for((j=i+1; j<${#result_arr[@]}; j++)); do
-            data_i=`echo "${result_arr[$i]}" | cut -d ' ' -f "$k"`
-            data_j=`echo "${result_arr[$j]}" | cut -d ' ' -f "$k"`
-            if [[ ${data_i} -lt ${data_j} ]]; then
-                tmp="${result_arr[$i]}"
-                result_arr[$i]="${result_arr[$j]}"
-                result_arr[$j]="$tmp"
-            fi
-        done
-    done
-done
+# -score (6), -ratio1 (2), -ratio2 (4), -lines (5), file1 (1), file2 (3)
+LC_ALL=C IFS=$'\n' result_arr=($(sort -k6,6nr -k2,2nr -k4,4nr -k5,5nr -k1,1 -k3,3 <<<"${result_arr[*]}"))
+unset IFS LC_ALL
+
 # print result
 for((i=0; i<${#result_arr[@]}; i++)); do
     echo "${result_arr[$i]}"

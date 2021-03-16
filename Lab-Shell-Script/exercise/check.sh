@@ -12,6 +12,7 @@ validator(){
     IFS=''; while read line && test -n "$line"; do
         lines+=("$line")
     done <<< "$input"
+    unset IFS
     if [[ "${#lines[@]}" != 3 ]]; then
         return 1
     fi

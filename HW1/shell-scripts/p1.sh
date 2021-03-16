@@ -22,7 +22,7 @@ thres=0
 url=""
 files=()
 
-while [ ${#@} -gt 0 ]; do
+while [[ ${#@} -gt 0 ]]; do
     case $1 in
         "-h"|"--help")
             echo -ne "${helpMsg}"
@@ -55,8 +55,7 @@ while [ ${#@} -gt 0 ]; do
         *)
             file_re1="^[a-zA-Z0-9_\/]+\.[a-zA-Z0-9_]+$|^\.{0,2}\/[a-zA-Z0-9_\/]+\.[a-z]+$"
             file_re2="^[a-zA-Z0-9_\/]+$|^\.{0,2}\/[a-zA-Z0-9_\/]+$"
-            if [[ "$1" =~ $file_re1 ]]\
-            || [[ "$1" =~ $file_re2 ]]; then
+            if [[ "$1" =~ $file_re1 || "$1" =~ $file_re2 ]]; then
                 files+=("$1")
                 shift
             else
@@ -69,7 +68,7 @@ done
 
 # validity check 1
 # exit if both cmd and url are empty
-if test -z "$cmd" && test -z "$url"; then
+if [[ -z "$cmd" && -z "$url" ]]; then
     echo -ne "Require -e argument to provide an executable command, or -u argument\
  to provide a result url.\nTry -h or –help for more help.\n"
     exit 1
@@ -78,11 +77,11 @@ fi
 
 # validity check 2
 # exit if target doesn't exist or isn't a readable regular file
-if test -n "$target"; then
-    if test ! -e "$target"; then
+if [[ -n "$target" ]]; then
+    if [[ ! -e "$target" ]]; then
         echo "Target file $target does not exist or is not a readable regular file."
         exit 1
-    elif test ! -f "$target" || test ! -r "$target"; then
+    elif [[ ! -f "$target" || ! -r "$target" ]]; then
         echo "Target file $target does not exist or is not a readable regular file."
         exit 1
     fi
@@ -103,7 +102,7 @@ fi
 
 # validity check 4
 # exit if no files
-if [ ${#files[@]} == 0 ]; then
+if [[ ${#files[@]} -eq 0 ]]; then
     echo -ne "Require at least one file to be tested similarity.\nTry -h or –help for\
  more help.\n"
     exit 1
@@ -112,10 +111,10 @@ fi
 # validity check 5
 # exit if file in files is invalid
 for filename in "${files[@]}"; do
-    if test ! -e "$filename"; then
+    if [[ ! -e "$filename" ]]; then
         echo "File $filename does not exist or is not a readable regular file."
         exit 1
-    elif test ! -f "$filename" || test ! -r "$filename"; then
+    elif [[ ! -f "$filename" || ! -r "$filename" ]]; then
         echo "File $filename does not exist or is not a readable regular file."
         exit 1
     fi

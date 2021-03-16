@@ -26,8 +26,20 @@ correct
 
 =======================
 
-./p2.sh ./client$ $ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9
+./p2.sh ./client$ $ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null
 
-./p2.sh ./client$ file2$ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9
+./p2.sh ./client$ file2$ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null
 
-./p2.sh ./client$ file9$ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9
+./p2.sh ./client$ file9$ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null
+
+=======================
+
+./p2 ./client$ $ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null | ./p3.sh $ 0
+
+./p2 ./client$ $ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null | ./p3.sh $ 1
+
+./p2 ./client$ file9$ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null | ./p3.sh file9$ 0
+
+./p2 ./client$ file9$ 0 $ file1 file2 file3 file4 file5 file6 file7 file8 file9 2> /dev/null | ./p3.sh file9$ 1
+
+
