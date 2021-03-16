@@ -32,7 +32,7 @@ while read line; do
 done
 
 if [[ $comp -eq 0 ]]; then
-    # case comp = 1
+    # case comp = 0
     files=()
     if [[ "${target_provided}" == 'True' ]]; then
         t=`echo "${prev_result[0]}" | cut -d ' ' -f 1`
@@ -59,5 +59,6 @@ if [[ $comp -eq 0 ]]; then
         echo "${files[@]}"
     fi
 else
-
+    # case comp = 1
+    
 fi
