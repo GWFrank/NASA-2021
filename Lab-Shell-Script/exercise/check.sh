@@ -9,7 +9,7 @@ validator(){
     # TODO: 1. store the $input, separated by linefeed, into an array $lines
     #       2. if the number of element in the array is not 3, return 1 (invalid)
     lines=()
-    IFS=''; while read line && test -n "$line"; do
+    IFS=''; while read -r line && test -n "$line"; do
         lines+=("$line")
     done <<< "$input"
     unset IFS
