@@ -8,11 +8,19 @@ b09902004 郭懷元
 
 #### 1.
 
+> Reference:
+>
+> http://www.cs.nccu.edu.tw/~jang/teaching/CompNet_files/Wireshark-%E5%9F%BA%E7%A4%8E%E6%95%99%E5%AD%B8.pdf
+
 Type `http` in display filter to make it easier to find the packet.
 
 ![http-packet](/home/frank/Github_Repos/NASA-2021/HW1/pics/http-packet.png)
 
 #### 2.
+
+> Reference:
+>
+> https://zh.wikipedia.org/zh-tw/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE
 
 The packet can't be found. Because we are accessing `登入界面．改` with https, the content of packets sent between the server and pc is encrypted. Therefore it is impossible to identify which packet contains my account and password if we only look at the content of each packet.
 
@@ -21,6 +29,10 @@ The packet can't be found. Because we are accessing `登入界面．改` with ht
 ### 好玩遊戲也有暗潮洶湧的一面
 
 #### 1.
+
+> Reference:
+>
+> b09902011 陳可邦
 
 In Wireshark, go to `statistics`->`conversations`, and we can see something like the image below after playing 2 games while Wireshark is running. Select the first row and click `Follow Stream...`.
 
@@ -37,6 +49,9 @@ After reading the conversation between client and server, we know the game works
 5. The TCP connection is terminated only when the process is killed.
 
 #### 2.
+
+> Reference:
+> b09902011 陳可邦
 
 In the `conversation` window, choose the conversation to `127.0.0.1:9394`
 
@@ -64,82 +79,7 @@ Flag: `HW1{d0_y0u_knovv_wH0_KaienLin_1s?}`
 
 ![flag1](/home/frank/Github_Repos/NASA-2021/HW1/pics/flag1.png)
 
-Since the client only handles transfering user inputs to the server, we can still play the game without `client-linux`. I choose python to communicate with the server and play games, because I am familiar with it and Ubuntu already has it. We can know what to send to the server by simply looking at past conversation when playing game with `client-linux`.
-
-Below is the python script I use:
-
-```python
-import socket
-
-HOST = "127.0.0.1"
-PORT = 9393
-
-# gamemode = "default"
-gamemode = "fast"
-start_msg = "start " + gamemode
-
-right = "right"
-left = "left"
-up = "up"
-down = "down"
-move = "Move: "
-break_line = "\n"
-
-MAX_Y = 21
-MAX_X = 34
-
-def moveX(step):
-    if step > 0:
-        move_str = move + right + break_line
-        client.sendall(move_str.encode())
-    if step < 0:
-        move_str = move + left + break_line
-        client.sendall(move_str.encode())
-
-def moveY(step):
-    if step > 0:
-        move_str = move + down + break_line
-        client.sendall(move_str.encode())
-    if step < 0:
-        move_str = move + up + break_line
-        client.sendall(move_str.encode())
-
-def decmps(host_msg):
-    msg_list = host_msg.split("\n")
-    block_x = msg_list[0]
-    block_y = msg_list[1]
-    ball_x = msg_list[2]
-    ball_y = msg_list[3]
-    block_x = int(block_x.split(" ")[1])
-    block_y = int(block_y.split(" ")[1])
-    ball_x = [int(i) for i in ball_x.split(" ") if i != "ballx:"]
-    ball_y = [int(i) for i in ball_y.split(" ") if i != "bally:"]
-    return block_x, block_y, ball_x, ball_y
-
-win = "win"
-lose = "lose"
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect((HOST, PORT))
-client.sendall(start_msg.encode())
-
-while True:
-    server_msg = str(client.recv(1024), encoding="utf-8")
-    if server_msg[:3] == win or server_msg[:4] == lose:
-        print(server_msg)
-        break
-    if server_msg[:4] == "give":
-        continue    
-    block_x, block_y, ball_x, ball_y = decmps(server_msg)
-
-    # for default and fast mode
-    moveX(ball_x[0] - block_x)
-    moveY(ball_y[0] - block_y)
-
-client.close()
-```
-
-
+Since the client only handles transfering user inputs to the server, we can still play the game without `client-linux`. I choose python to communicate with the server and play games, because I am familiar with it and Ubuntu already has it. We can know what to send to the server by simply looking at past conversation when playing game with `client-linux`. The script I use is [here](https://gist.github.com/GWFrank/d7346aa6a740007e0a73c905c09f4cbd)
 
 #### 5.
 
@@ -153,90 +93,7 @@ Flag: `HW1{Dou8l3_b@ll_d0uB1e_Fun!}`
 
 ![flag2](/home/frank/Github_Repos/NASA-2021/HW1/pics/flag2.png)
 
-The approach is basically the same as last one. The only thing I changed is game strategy because there are two balls.
-
-```python
-import socket
-
-HOST = "127.0.0.1"
-PORT = 9393
-
-# gamemode = "default"
-# gamemode = "fast"
-gamemode = "double"
-start_msg = "start " + gamemode
-
-right = "right"
-left = "left"
-up = "up"
-down = "down"
-move = "Move: "
-break_line = "\n"
-
-MAX_Y = 21
-MAX_X = 34
-
-def moveX(step):
-    if step > 0:
-        move_str = move + right + break_line
-        client.sendall(move_str.encode())
-    if step < 0:
-        move_str = move + left + break_line
-        client.sendall(move_str.encode())
-
-def moveY(step):
-    if step > 0:
-        move_str = move + down + break_line
-        client.sendall(move_str.encode())
-    if step < 0:
-        move_str = move + up + break_line
-        client.sendall(move_str.encode())
-
-def decmps(host_msg):
-    msg_list = host_msg.split("\n")
-    block_x = msg_list[0]
-    block_y = msg_list[1]
-    ball_x = msg_list[2]
-    ball_y = msg_list[3]
-    block_x = int(block_x.split(" ")[1])
-    block_y = int(block_y.split(" ")[1])
-    ball_x = [int(i) for i in ball_x.split(" ") if i != "ballx:"]
-    ball_y = [int(i) for i in ball_y.split(" ") if i != "bally:"]
-    return block_x, block_y, ball_x, ball_y
-
-win = "win"
-lose = "lose"
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect((HOST, PORT))
-client.sendall(start_msg.encode())
-
-while True:
-    server_msg = str(client.recv(1024), encoding="utf-8")
-    if server_msg[:3] == win or server_msg[:4] == lose:
-        print(server_msg)
-        break
-    if server_msg[:4] == "give":
-        continue    
-    block_x, block_y, ball_x, ball_y = decmps(server_msg)
-
-    # for double mode
-    if min(ball_x) < MAX_X-max(ball_x):
-        idx = ball_x.index(min(ball_x))
-        moveY(ball_y[idx] - block_y)
-    else:
-        idx = ball_x.index(max(ball_x))
-        moveY(ball_y[idx] - block_y)
-    
-    if min(ball_y) < MAX_Y-max(ball_y):
-        idx = ball_y.index(min(ball_y))
-        moveX(ball_x[idx] - block_x)
-    else:
-        idx = ball_y.index(max(ball_y))
-        moveX(ball_x[idx] - block_x)
-
-client.close()
-```
+The approach is basically the same as last one. The only thing I changed is game-playing strategy because there are two balls. The script is [here](https://gist.github.com/GWFrank/334ace190eec534afc440bb8c734c549)
 
 An alternative approach is by looking at the server's binaries.
 
@@ -316,6 +173,8 @@ DHCP works on application layer. A DHCP server automatically offers parameters f
 
 > Reference:
 >
+> Lab - shell script's slides
+>
 > http://linux.vbird.org/linux_basic/0340bashshell-scripts.php
 >
 > https://blog.techbridge.cc/2019/11/15/linux-shell-script-tutorial/
@@ -324,5 +183,24 @@ DHCP works on application layer. A DHCP server automatically offers parameters f
 >
 > https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash
 >
-> and many many pages that i forgot to put in here
+> and dozens pages that I forgot to copy the url
 
+### Task 1 - Argument Parser and Checker
+
+The first part is to parse the parameters, I use `case` to implement this part. Checking filename format can be done with some simple regular expression.
+
+For the validity checks, I implement those with some built-in arguments like`-n`, `-z`, `-e`, `-f`, and `-r`.
+
+### Task 2 - Crawler and Filter
+
+Parsing parameters here is much easier, since everything is ordered in a fixed way. I use `sed` to get rid of `$` signs at the end.
+
+Translating relative paths to absolute paths is done with `realpath`, and checking the directory of a file is done with `dirname`.
+
+I use `curl` with `-L` option to follow the redirection, and with `-s` to disable `curl`'s progress bar. Parsing the raw html file is done by using regular expressions and `sed`. Getting the filename without path and extension is done by using `basename` and `sed`.
+
+For the sorting part, `LC_ALL=C` is to make sure strings are ordered by dictionary order.
+
+### Task 3 - Analyzer
+
+The cases where `comp=0` or `comp=1 && target isn't empty` are rather simple, just use `cut` to extract filenames from input file and sort them. As for the case where `comp=1 && target is empty`, I use the provided algorithm and pseudo code to implement. The checkpoint can be easily done using `$right` and `$left` that we create when building forward star.

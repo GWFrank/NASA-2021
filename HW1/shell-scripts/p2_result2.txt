@@ -1,0 +1,15 @@
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file4 95 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file2 78 360 100
+/home/frank/Testing-Files/file1 27 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file4 24 354 70
+/home/frank/Testing-Files/file1 93 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file2 67 78 67
+/home/frank/Testing-Files/file2 78 /home/frank/Testing-Files/file1 19 208 65
+/home/frank/Testing-Files/file1 46 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file1 24 269 64
+/home/frank/Testing-Files/file1 16 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file5 14 354 63
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file4 81 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file1 2 195 58
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file5 45 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file2 33 205 58
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file1 30 /home/frank/Testing-Files/file2 29 251 58
+/home/frank/Testing-Files/file2 49 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file5 28 183 54
+/home/frank/Testing-Files/file1 68 /home/frank/Testing-Files/file3 57 57 52
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file4 82 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file3 2 148 51
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file4 16 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file5 1 252 43
+/home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file1 24 /home/frank/Testing-Files/file3 4 182 37
+/home/frank/Testing-Files/file1 21 /home/frank/Github_Repos/NASA-2021/HW1/shell-scripts/file3 18 82 25
