@@ -1,3 +1,7 @@
+---
+typora-root-url: pics
+---
+
 # NASA HW2
 
 b09902004 郭懷元
@@ -41,7 +45,7 @@ iperf -s -i 5
 
 Result
 
-![iperf-p1](/home/frank/Github_Repos/NASA-2021/HW2/iperf-p1.png)
+![iperf-p1](iperf-p1.png)
 
 **From laptop (connected to `csie-5G`) to R204 PC**
 
@@ -60,7 +64,7 @@ iperf -c 192.168.204.36 -t 60 -i 5
 
 Result
 
-![iperf-p2-1](/home/frank/Github_Repos/NASA-2021/HW2/iperf-p2-1.png)
+![iperf-p2-1](iperf-p2-1.png)
 
 **From R204 PC to laptop  (connected to `csie-5G`)**
 
@@ -79,7 +83,7 @@ iperf -c 10.5.0.147 -t 60
 
 Result
 
-![iperf-p2-2](/home/frank/Github_Repos/NASA-2021/HW2/iperf-p2-2.png)
+![iperf-p2-2](iperf-p2-2.png)
 
 **From laptop A to laptop B (both connected to `csie-5G`)**
 
@@ -98,7 +102,7 @@ iperf -c 10.5.6.200 -t 60 -i 5
 
 Result
 
-![iperf-p3](/home/frank/Github_Repos/NASA-2021/HW2/iperf-p3.png)
+![iperf-p3](iperf-p3.png)
 
 #### 2.
 
@@ -136,13 +140,202 @@ Server message:
 284a1e00b75784f5ab2f45a086e48bb6
 ```
 
-![ipv6](/home/frank/Github_Repos/NASA-2021/HW2/ipv6.png)
+![ipv6](ipv6.png)
 
 
 
 ---
 
 ## System Administration
+
+### 1.
+
+> Reference:
+>
+> Lab 3 slides
+>
+> https://zh.wikipedia.org/wiki/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F
+>
+> http://linux.vbird.org/linux_basic/0230filesystem.php
+>
+> https://unix.stackexchange.com/questions/61209/create-and-format-exfat-partition-from-linux
+
+Commands:
+
+```shell
+sudo -i
+lsblk # check current status
+parted /dev/sda print # check if it's MBR or GPT
+pacman -Syy
+pacman -S gdisk # install gdisk bc it's GPT
+umount /dev/sda3
+e2fsck /dev/sda3
+resize2fs /dev/sda3 5G
+gdisk /dev/sda
+# then follow the instructions in gdisk to:
+# 1. delete partition3
+# 2. create partition 3 with 5 GB
+# 3. create partition 4 with rest of the space
+partprobe
+vim /etc/fstab
+# in vim:
+# find the line for mounting /home/nasa/documents
+# change the original 'UUID=<some ID>' to '/dev/sda3'
+reboot
+# after reboot
+sudo -i
+lsblk
+mkfs.exfat /dev/sda4
+mount /dev/sda4 /home/nasa/share
+vim /etc/fstab
+# in vim:
+# add a new line like this:
+# /dev/sda4    /home/nasa/share    exfat    defaults    0 0
+reboot
+lsblk; df -hT
+```
+
+![sa-p1](sa-p1.png)
+
+---
+
+### 2.
+
+> Reference:
+>
+> https://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
+
+Commands:
+
+```shell
+sudo -i
+dd if=/dev/zero of=/myswap bs=1024 count=2097152
+chown root:root /myswap
+chmod 0600 /myswap
+mkswap /swapfile1
+swapon /myswap
+free -h
+```
+
+![sa-p2](/sa-p2.png)
+
+---
+
+### 3.
+
+> References:
+>
+> https://linuxhint.com/set-up-btrfs-raid/
+
+Commands:
+
+```shell
+sudo mkfs.btrfs -L p3 -d raid1 -m raid1 -f /dev/sdb /dev/sdc
+sudo mount /dev/sdb /home/nasa/mnt
+#sudo blkid --match-token TYPE=btrfs # look for the RAID array's UUID
+#sudo vim /etc/fstab
+cd ~
+ls -lah
+sudo chown nasa:nasa ~/mnt
+sudo btrfs filesystem show /home/nasa/mnt; sudo btrfs filesystem df /home/nasa/mnt
+```
+
+![sa-p3](/sa-p3.png)
+
+---
+
+### 4.
+
+> References:
+>
+> https://linuxhint.com/create-mount-btrfs-subvolumes/
+
+Commands:
+
+```shell
+sudo mount /dev/sdb /home/nasa/mnt
+sudo btrfs subvolume create /home/nasa/mnt/@
+sudo btrfs subvolume create /home/nasa/mnt/@videos
+sudo btrfs subvolume create /home/nasa/mnt/@documents
+sudo mount /dev/sdb -o subvol=@ /home/nasa/courses
+sudo mount /dev/sdb -o subvol=@videos /home/nasa/courses/videos
+sudo mount /dev/sdb -o subvol=@documents /home/nasa/courses/documents
+sudo blkid --match-token TYPE=btrfs # look for the UUID of /dev/sdb
+sudo vim /etc/fstab
+sudo reboot
+```
+
+![sa-p4](/sa-p4.png)
+
+---
+
+### 5.
+
+> References:
+>
+> https://linuxhint.com/use-btrfs-snapshots/
+
+Commands:
+
+```shell
+sudo btrfs subvolume snapshot -r /home/nasa/courses/documents /home/nasa/courses/documents_backup
+```
+
+---
+
+### 6.
+
+> References:
+>
+> https://linuxhint.com/back_up_btrfs_snapshots_external_drives/
+
+Commands:
+
+```shell
+sudo cp -R /home/nasa/videos/* /home/nasa/courses/videos
+sudo btrfs subvolume snapshot -r /home/nasa/courses/videos /home/nasa/courses/videos_backup
+sudo btrfs send /home/nasa/courses/videos_backup | sudo btrfs receive /home/nasa/backup
+```
+
+![sa-p6](/sa-p6.png)
+
+---
+
+### 7.
+
+> References:
+>
+> https://btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices
+>
+> https://superuser.com/questions/901067/btrfs-convert-from-raid1-to-raid5
+
+Commands
+
+```shell
+sudo btrfs device add /dev/sdd /home/nasa/courses
+sudo btrfs balance start -dconvert=raid5 -mconvert=raid5 /home/nasa/courses
+```
+
+![sa-p7](/sa-p7.png)
+
+---
+
+### 8.
+
+> References:
+>
+> https://btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices
+
+Commands
+
+```shell
+sudo btrfs device delete /dev/sdc /home/nasa/courses
+sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /home/nasa/courses
+```
+
+![sa-p8](/sa-p8.png)
+
+
 
 
 
