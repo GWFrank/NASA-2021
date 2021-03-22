@@ -18,9 +18,15 @@ b09902004 郭懷元
 >
 > https://zh.wikipedia.org/wiki/%E8%BD%BD%E6%B3%A2%E4%BE%A6%E5%90%AC%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE
 >
-> 
+> https://www.geeksforgeeks.org/collision-avoidance-in-wireless-networks/
 
+CSMA/CD passively detects if a collision has happened. If it detects a collision, it will stop sending frames as soon as possible. CSMA/CA, on the other hand, will check if the medium is busy or not before sending anything. If it's busy, it will wait for a random time then continue the transmission. CSMA/CA also uses a three-way handshake called RTS/CTS.
 
+In wireless network, it's really difficult to precisely detect a collision, because the two nodes that collides might not be within each other's range (a.k.a. hidden node). Therefore CSMA/CD won't work in   a wireless condition, but CSMA/CA's RTS/CTS can fix this problem.
+
+### 2.
+
+Collision domain is the range where transmission collisions happen. Boardcast domain is the range where all nodes can broadcast messages to each other.	
 
 ---
 
@@ -113,7 +119,7 @@ Result
 | R204 PC                           | Laptop (connected to `csie-5G`)   | 140 Mbps           |
 | Laptop A (connected to `csie-5G`) | Laptop B (connected to `csie-5G`) | 66.6 Mbps          |
 
-
+The highest bandwidth is betweem R204 PC and CSIE Workstation, and it's because the path is completely on wire. In the data we can see that when WiFi is introduced in the path, the bandwidth is greatly reduced. The difference between laptop to PC and PC to laptop is probably because more downstream bandwidth of `csie-5G` is occupied than upstream bandwidth, and the bottle
 
 ---
 
