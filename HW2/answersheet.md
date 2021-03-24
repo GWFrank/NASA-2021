@@ -164,6 +164,8 @@ Server message:
 >
 > http://linux.vbird.org/linux_basic/0230filesystem.php
 >
+> https://askubuntu.com/questions/24027/how-can-i-resize-an-ext-root-partition-at-runtime
+>
 > https://unix.stackexchange.com/questions/61209/create-and-format-exfat-partition-from-linux
 
 Commands:
