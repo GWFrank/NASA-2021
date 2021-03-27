@@ -24,9 +24,31 @@ CSMA/CD passively detects if a collision has happened. If it detects a collision
 
 In wireless network, it's really difficult to precisely detect a collision, because the two nodes that collides might not be within each other's range (a.k.a. hidden node). Therefore CSMA/CD won't work in   a wireless condition, but CSMA/CA's RTS/CTS can fix this problem.
 
-### 2.
+#### 2.
 
-Collision domain is the range where transmission collisions happen. Boardcast domain is the range where all nodes can broadcast messages to each other.	
+> References:
+>
+> http://ccna2012.weebly.com/24291257732131222495-30896257583893622495.html
+>
+> https://www.geeksforgeeks.org/collision-domain-and-broadcast-domain-in-computer-network/
+
+Collision domain is the range where the frames transferred will collide with each other. Broadcast domain is the range where a broadcast message sent by any device will be received by every other devices in this domain.
+
+(a) Hubs can't split either collision domains or broadcast domains. That's because hubs don't uses MAC address table, and they will sent the received packet to every connected device except the source.
+
+(b) Each port on a switch is an individual collision domain, because switches uses MAC address tables to achieve point-to-point transfer. But switches can't split broadcast domains, splitting them requires a network layer device.
+
+(c) A router splits both collision domain and broadcast domain, because a router connects different networks, and those two domains are restricted to a local network.
+
+#### 3.
+
+> References:
+>
+> https://en.wikipedia.org/wiki/Broadcast_storm
+>
+> https://en.wikipedia.org/wiki/Spanning_Tree_Protocol
+
+When many broadcast traffics accumulate on a network and consumes lots of resources, we called this broadcast storm. It's usually caused by loops in network topology. STP solve this problem by cutting excessive paths , breaking all loops in the network topology.
 
 ---
 
@@ -119,7 +141,11 @@ Result
 | R204 PC                           | Laptop (connected to `csie-5G`)   | 140 Mbps           |
 | Laptop A (connected to `csie-5G`) | Laptop B (connected to `csie-5G`) | 66.6 Mbps          |
 
-The highest bandwidth is betweem R204 PC and CSIE Workstation, and it's because the path is completely on wire. In the data we can see that when WiFi is introduced in the path, the bandwidth is greatly reduced. The difference between laptop to PC and PC to laptop is probably because more downstream bandwidth of `csie-5G` is occupied than upstream bandwidth, and the bottle
+The highest bandwidth is betweem R204 PC and CSIE Workstation, and it's because the path is completely on wire, which is more robust than WiFi.
+
+The difference between laptop to PC and PC to laptop is probably because more downstream bandwidth is occupied than upstream one, and becomes the bottleneck in transmission.
+
+The lowest bandwidth occurs when both server and client are connected to WiFi, because wireless transmission could have more data loss then wired.
 
 ---
 
@@ -147,8 +173,6 @@ Server message:
 ```
 
 ![ipv6](ipv6.png)
-
-
 
 ---
 
@@ -240,8 +264,6 @@ Commands:
 ```shell
 sudo mkfs.btrfs -L p3 -d raid1 -m raid1 -f /dev/sdb /dev/sdc
 sudo mount /dev/sdb /home/nasa/mnt
-#sudo blkid --match-token TYPE=btrfs # look for the RAID array's UUID
-#sudo vim /etc/fstab
 cd ~
 ls -lah
 sudo chown nasa:nasa ~/mnt
@@ -343,7 +365,60 @@ sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /home/nasa/courses
 
 ![sa-p8](/sa-p8.png)
 
+---
 
+### 9.
 
+#### (i)
 
+> References:
+>
+> https://en.wikipedia.org/wiki/Comparison_of_file_systems
+>
+> https://linuxhint.com/btrfs-vs-ext4-filesystems-comparison/
 
+Btrfs has built-in RAID 1, RAID 0 , and RAID 10 support, but ext4 doesn't have any RAID built-in. Btrfs supports online shrinking, but ext4 doesn't support it.
+
+#### (ii)
+
+> References:
+>
+> https://zh.wikipedia.org/wiki/RAID
+
+In RAID 0, we parallelize reading and writing over all the disks in the array, thus increase performance. Files would have only a single copy and the data is distributed all over the disk array.
+
+In RAID 1, the data on a disk would be mirrored to all the other disks in the array, thus the security is ensured, but waste lots of space.
+
+RAID 5 is like a more secure RAID 0, the data is also distributed to all disks, but a parity data is calculated and stored in a disk different to where the corresponding data is stored. RAID 5 have slightly lower performance than RAID 0, but can allow a single disk failure.
+
+RAID 10 is a combination of RAID 1 and RAID 0. Two disks are paired to build a RAID 1 array, and every RAID array is then combined to build a RAID 0 array. As long as not both disks in a pair are dead, the data is still secure and the system would still work.
+
+#### (iii)
+
+> References:
+>
+> https://medium.com/@jain.sm/filesystem-in-userspace-5d1b398b04e
+>
+> https://www.jianshu.com/p/c2b77d0bbc43
+
+FUSE is a feature that lets users define file operations and create their filesystems without having to deal with kernel-related stuff. One advantage is that it can be more portable because libraries would deal with the kernel. The obvious disadvantage is that efficiency is worse than those directly implemented in kernel.
+
+#### (iv)
+
+> References:
+>
+> https://en.wikipedia.org/wiki/ZFS
+>
+> https://zh.wikipedia.org/wiki/RAID
+>
+> https://www.reddit.com/r/homelab/comments/b4iz3w/zfs_vs_hardware_raid/
+>
+> https://superuser.com/questions/1134753/can-zfs-cope-with-sudden-power-loss-what-events-cause-a-pool-to-be-irrecoverab
+
+ZFS is a system that combines both file system and volume manager. It has control from physical layer to file system layer. ZFS uses many checksum mechanisms to secure data. It also has features like RAID, snapshots, and cloning.
+
+Hardware RAID is a means to implement RAID. A RAID card is used in hardware RAID, and has dedicated processor, memory, and backup battery to handle reading and writing. Because it's implemented in hardware, it can be separated from the OS easily and it's almost plug-and-play.
+
+In the case of a server, I would choose ZFS over hardware RAID. The first reason being hardware RAID relies heavily on the RAID card, which means that if the RAID card somehow dies, you probably would need to find the exact card. On the other hand, ZFS is completely a software solution, therefore doesn't have this problem.
+
+Also, the resources ZFS might consume is becoming negligible as CPU performance is increasing a lot, making dedicated hardware just for RAID a bit excessive.
