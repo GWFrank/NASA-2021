@@ -55,13 +55,22 @@ Because `Gi1/0/1` is a trunk port and the destination is in `vlan 424`, since `v
 
 No. According to the IEEE standard, link aggregation requires all ports to have the same speed. In this case the maxmium bandwidth would be 2*100Mbps.
 
-2.
+#### 2.
 
 > References:
 >
 > Lab 4 slides
 
-`channel-group mode` is preferred to be set to `active` rather than `passive`.
+`channel-group mode` is preferred to be set to `active` rather than `passive`, because link aggregation would work only if at least one side is set to `active`.
+
+Commands to fix:
+
+```
+Switch> ena
+Switch# conf t
+Switch(config)# int range Gi1/0/1-2
+CiscoLab(config-if-range)# channel-group 1 mode active
+```
 
 ---
 
@@ -106,7 +115,39 @@ An ARP table shows a IP address's corresponding MAC address. A MAC address table
 
 ### 4.
 
+#### 1.
 
+> References:
+>
+> https://en.wikipedia.org/wiki/Serial_communication
+
+Serial communication is a means of sending bits, and is contrast to "parallel communication". For example, if the data we are sending is `1011`, in serial communication we would send `1`, `0`, `1`, `1` one at a time. While in parallel communication, we would have 4 channels and each bit it sent in an individual channel.
+
+#### 2.
+
+The upside is that it's almost plug-and-play, very few things need to be configured in order to access the device.
+
+The downside is that you can't remotely control and configure the device.
+
+#### 3.
+
+> References:
+>
+> https://www.jannet.hk/zh-Hant/post/console-cable/
+
+Assuming the switch hasn't been configured and current settings are unknown. One way is to use normal ethernet cable to DIY a Rollover cable, then use a RJ45 to DB9 (female) adapter.
+
+#### 4.
+
+> References:
+>
+> https://coolking1206.pixnet.net/blog/post/57616767
+>
+> https://www.cisco.com/c/en/us/support/docs/smb/switches/cisco-350x-series-stackable-managed-switches/smb5252-what-is-stacking.html
+
+Compared to port trunk, stacking can tolerant not only broken cables but also broken switches.
+
+In this case we have 2 switches to stack, so we need two in total, one cable from `switch 1`  to `switch 2`, and the other from `switch 2` to `switch 1`.
 
 ---
 
@@ -246,8 +287,9 @@ sudo vim /etc/sysconfig/selinux
 # change "SELINUX=enforced" to "SELINUX=disabled"
 reboot
 sudo systemctl start libvirtd
-# this line is to enable libvird
+# this line is to manually start libvird
 sudo systemctl enable libvirtd
+# this line is to auto start libvird at boot
 reboot
 ```
 
@@ -306,7 +348,9 @@ Back to command line
 ```shell
 ifup ens33
 ifup br10
+# bring both interfaces up
 reboot
+# make sure everything behave properly
 ```
 
 
@@ -341,6 +385,8 @@ sudo mkdir -p /data/img
 ```shell
 cd /data/img
 sudo qemu-img create -f qcow2 nasa.qcow2 10G
+# usage:
+# qemu-img create -f <format> <filename> <size>
 ```
 
 #### 3.
@@ -512,6 +558,8 @@ sudo virsh setvcpus ILoveNASA-2 1 --config
 
 ```shell
 sudo virsh domiflist ILoveNASA-2
+# usage:
+# virsh domiflist <guest name>
 ```
 
 
