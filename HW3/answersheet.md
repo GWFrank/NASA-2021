@@ -67,7 +67,40 @@ No. According to the IEEE standard, link aggregation requires all ports to have 
 
 ### 3.
 
+#### 1.
 
+> References:
+>
+> https://documentation.meraki.com/MS/Layer_3_Switching/Layer_3_vs_Layer_2_Switching
+>
+> http://www.fiber-optic-equipment.com/layer-3-switch-vs-router-choose.html
+
+A L2 switch uses MAC address to forward frames to other machines, and it can only work within a LAN. A L3 switch is like a L2 switch that can do routing.
+
+Both a router and a L3 switch can route packets. But L3 switches are designed with the purpose of handling traffics between VLAN, unlike routers are for WAN. Therefore L3 switches doesn't support many protocol that routers support, like NAT. L3 switches also tend to be cheaper than routers.
+
+#### 2.
+
+> References:
+>
+> None
+
+An ARP table shows a IP address's corresponding MAC address. A MAC address table shows the MAC address of the device connected to a port.
+
+#### 3.
+
+> References:
+>
+> https://www.sikich.com/insight/how-to-find-which-switch-port-a-device-is-plugged-into-via-ip-address/
+
+1. Connect to the core switch.
+2. `ping 140.112.30.250` to get the ARP table and MAC address table updated.
+3. Type `sh ip arp 140.112.30.250`, we should get a MAC address here.
+4. Type `sh mac address-table address <mac address>`, we should get a port.
+5. Since the user isn't directly connected to core switch, use `sh cdp neighbor` and we know which switch is connected to the port we get in the previous step.
+6. Connect to the switch we found in the previous step.
+7. Repeat step 4, and use `sh cdp neighbor` to check if the port is connected to another switch.
+8. If it is, we go back to step 6. If not, we find the user.
 
 ---
 
