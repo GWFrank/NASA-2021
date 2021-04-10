@@ -18,7 +18,13 @@ b09902004 郭懷元
 >
 > https://learningnetwork.cisco.com/s/question/0D53i00000Kt6oFCAR/what-happens-when-an-8021q-trunk-port-receives-a-tagged-frame-with-vlan-id-the-same-as-the-native-vlan
 
-When the frame is sent to `Gi1/0/3`, because this interface is set to `access` mode, the frame will be tagged to be `vlan 307`. However, when it's sent to either `Gi1/0/4` or `Gi1/0/5`, because these two interface are set to `trunk` mode, no tags would be added, despite the fact that they have different native vlan.
+Assuming the frame comes from `vlan 307`.
+
+Before `Gi1/0/3` it would have a tag of `vlan 307`. After `Gi1/0/3` the tag is stripped because `Gi1/0/3` is an access port.
+
+Before `Gi1/0/4` it would have a tag of `vlan 307`. After `Gi1/0/4` the tag remains the same because `Gi1/0/4` is a trunk port and `vlan 307` isn't its native vlan.
+
+Before `Gi1/0/5` it would have a tag of `vlan 307`. After `Gi1/0/5` the tag is stripped because `vlan 307` is the native vlan on `Gi1/0/5` .
 
 #### 2.
 
@@ -30,7 +36,9 @@ When the frame is sent to `Gi1/0/3`, because this interface is set to `access` m
 >
 > https://community.cisco.com/t5/switching/what-happens-when-switch-trunk-port-connected-to-pc/td-p/3731202
 
-Because `Gi1/0/1` is a trunk port and the destination is in `vlan 424`, since `vlan 424` is not the native vlan of `Gi1/0/1`, the header remains the same after going through `Gi1/0/1`. When the packets goes through `Gi1/0/2`, because it's an access port, the header is stripped.
+Because `Gi1/0/1` is a trunk port and the destination is in `vlan 424`, since `vlan 424` is not the native vlan of `Gi1/0/1`, the header remains the same after going through `Gi1/0/1`.
+
+When the packets goes through `Gi1/0/2`, because it's an access port, the header is stripped.
 
 #### 3.
 
@@ -360,6 +368,8 @@ reboot
 ### 3.
 
 > References:
+>
+> 林順訢
 >
 > https://serverfault.com/questions/731417/how-do-you-create-a-qcow2-file-that-is-small-yet-commodious-on-a-linux-server
 >
