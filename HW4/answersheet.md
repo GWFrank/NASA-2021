@@ -20,6 +20,8 @@ When using `block`, the packets received are dropped siliently without sending a
 
 Generally speaking, `block` is preferred on WAN settings and `reject` is preferred on LAN settings.
 
+---
+
 #### 2.
 
 > Refs:
@@ -27,6 +29,8 @@ Generally speaking, `block` is preferred on WAN settings and `reject` is preferr
 > https://www.reddit.com/r/PFSENSE/comments/jt8be5/whats_the_difference_between_using_lan_net_and/gc42ogx/
 
 `interface net` means all addresses in the same subnet, and `interface address` means the address of the interface on pfsense. For example, suppose an interface `vlan5` is on `192.168.42.1/24`, then `vlan5 net` is `192.168.42.1-255` and `vlan5 address` is `192.168.42.1`.
+
+---
 
 #### 3.
 
@@ -39,7 +43,91 @@ The firewall in pfsense is a *stateful firewall*. A stateful firewall will keep 
 
 ---
 
+### pfSense
 
+#### 1.
+
+> Refs:
+>
+> Lab slides
+
+`Interfaces` -> `Assignments` -> `VLANs` -> `Add`, create one vlan with tag `5` and one with tag `99`.
+
+Go to `Interface Assignments` to add those two vlan interfaces.
+
+`Interfaces` -> `OPT1`, and do the following configs:
+
+- **Enable**: check the box
+- **Description**: `VLAN5`
+- **IPv4 Configuration Type**: `Static IPv4`
+- **IPv4 Address**: `10.5.255.254/16`
+
+`Interfaces` -> `OPT2`, and do the following configs:
+
+- **Enable**: check the box
+- **Description**: `VLAN99`
+- **IPv4 Configuration Type**: `Static IPv4`
+- **IPv4 Address**: `192.168.99.254/24`
+
+`Services` -> `DHCP Server` -> `VLAN5`, and do the following configs:
+
+- **Enable**: check the box
+- **Range**: From `10.5.0.1` to `10.5.255.253`
+- **DNS Servers**: `8.8.8.8`, `8.8.4.4`
+
+`Services` -> `DHCP Server` -> `VLAN99`, and do the following configs:
+
+- **Enable**: check the box
+- **Range**: From `192.168.99.1` to `192.168.99.253`
+- **DNS Servers**: `8.8.8.8`, `8.8.4.4`
+
+---
+
+#### 2.
+
+> Refs:
+>
+> https://forums.serverbuilds.net/t/guide-aliases-in-pfsense/5777
+
+`Firewall` -> `Aliases`
+
+Add one entry with the following configs:
+
+- **Name**: `GOOGLE_DNS`
+- **Type**: `Host`
+- **IP or FQDN**: `8.8.8.8`, `8.8.4.4`
+
+Add one entry with the following configs:
+
+- **Name**: `ADMIN_PORTS`
+- **Type**: `Port`
+- **Port**: `22`, `80`, `443`
+
+Add one entry with the following configs:
+
+- **Name**: `CSIE_WORKSTATIONS`
+- **Type**: `Host`
+- **IP or FQDN**: `linux1.csie.org`, `linux2.csie.org`, `linux3.csie.org`, `linux4.csie.org`, `linux5.csie.org`
+
+---
+
+#### 3.
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+
+---
 
 
 ## System Administration
