@@ -35,7 +35,7 @@ Generally speaking, `block` is preferred on WAN settings and `reject` is preferr
 > https://lin0204.blogspot.com/2017/01/blog-post_30.html
 > https://docs.netgate.com/pfsense/en/latest/firewall/fundamentals.html#stateful-filtering
 
-The firewall in pfsense is a *stateful firewall*. A stateful firewall will keep track of traffics going through, and allow expected respond packets that are not directly allowed in rules. For example, if I send a TCP request to a website, the firewall will expect a response packet for that request.
+The firewall in pfsense is a *stateful firewall*. A stateful firewall will keep track of traffics going through, and allow expected respond packets that are not directly allowed in rules. For example, if I send a TCP request to a website, the firewall will allow the respond packet from that website.
 
 ---
 
