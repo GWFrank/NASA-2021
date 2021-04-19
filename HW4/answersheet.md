@@ -113,15 +113,140 @@ Add one entry with the following configs:
 
 #### 3.
 
+> Refs:
+>
+> https://blog.51cto.com/fxn2025/1943916
 
+`System` -> `Advanced` -> navigate to `Secure Shell`
 
+Check the box for enabling ssh
 
+`Firewall` -> `Rules` -> `VLAN99`
 
+Add a new entry with the these config:
 
+- **Action**: `Pass`
+- **Interface**: `VLAN99`
+- **Address Family**: `IPv4`
+- **Protocol**: `TCP`
+- **Source**: `VLAN99 net`
+- **Destination**: `VLAN99 Address`
+- **Destination Port Range**: `ADMIN_PORTS`
 
 ---
 
+#### 4.
 
+> Refs:
+>
+> None
+
+`Firewall` -> `Rules` -> `VLAN99`
+
+Add some entries with these configs:
+
+- Entry 1
+  - **Action**: `Pass`
+  - **Interface**: `VLAN99`
+  - **Address Family**: `IPv4`
+  - **Protocol**: `Any`
+  - **Source**: `VLAN99 net`
+  - **Destination**: `VLAN5 net`
+- Entry 2
+  - **Action**: `Pass`
+  - **Interface**: `VLAN99`
+  - **Address Family**: `IPv4`
+  - **Protocol**: `Any`
+  - **Source**: `VLAN99 net`
+  - **Destination**: `Single host or alias`, `GOOGLE_DNS`
+- Entry 3
+  - **Action**: `Pass`
+  - **Interface**: `VLAN99`
+  - **Address Family**: `IPv4`
+  - **Protocol**: `Any`
+  - **Source**: `VLAN99 net`
+  - **Destination**: `Single host or alias`, `CSIE_WORKSTATIONS`
+- Entry 4
+  - **Action**: `Block`
+  - **Interface**: `VLAN99`
+  - **Address Family**: `IPv4`
+  - **Protocol**: `Any`
+  - **Source**: `VLAN99 net`
+  - **Destination**: `any`
+
+And put entry 4 at the bottom.
+
+---
+
+#### 5.
+
+> Refs:
+>
+> https://www.reddit.com/r/PFSENSE/comments/7srwxc/question_about_multiple_interfaces_and_firewall/
+>
+> https://docs.netgate.com/pfsense/en/latest/firewall/floating-rules.html
+
+`Firewall` -> `Rules` -> `Floating`
+
+add an entry with these configs:
+
+- **Action**: `Block`
+- **Interface**: `WAN`, `LAN`, `VLAN5`, `VLAN99`
+- **Direction**: `any`
+- **Address Family**: `IPv4`
+- **Protocol**: `any`
+- **Source**: invert match `VLAN99 net`
+- **Destination**: `VLAN99 net`
+
+---
+
+#### 6.
+
+> Refs:
+>
+> https://docs.netgate.com/pfsense/en/latest/firewall/time-based-rules.html
+
+`Firewall` -> `Schedules`
+
+add an entry like this:
+
+- **Schedule Name**: `block_VLAN5`
+- **Month**: `May_21`
+- **Date**: `11`
+- **Time**: `0:00` ~ `23:59`
+- click `add time`
+
+`Firewall` -> `Rules` -> `VLAN5`
+
+add an entry like this:
+
+- **Action**: `Block`
+- **Interface**: `VLAN5`
+- **Address Family**: `IPv4`
+- **Protocol**: `Any`
+- **Source**: `any`
+- **Destination**: `any`
+- click `Display Advanced`
+- **Schedule**: `block_VLAN5`
+
+---
+
+#### 7.
+
+> Refs:
+>
+> None
+
+`Firewall` -> `Rules` -> `VLAN5`
+
+add an entry to the bottom with these configs:
+
+- **Action**: `Pass`
+- **Interface**: `VLAN5`
+- **Address Family**: `IPv4`
+- **Protocol**: `Any`
+- **Source**: `VLAN5 net`
+- **Destination**: `any`
 
 
 
