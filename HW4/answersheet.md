@@ -248,12 +248,26 @@ add an entry to the bottom with these configs:
 - **Source**: `VLAN5 net`
 - **Destination**: `any`
 
-
-
-
-
 ---
 
-
 ## System Administration
+
+### 1. 關於 Container
+
+#### 1.
+
+When to use containers
+
+- A web backend environment that uses specific versions of Python, MySQL and Node.js.
+- An environment packed with your application to avoid any dependency issues.
+- An envrionment for students to practice programming without worrying compiler version issues
+- An web server environment
+
+When to use VMs intead of containers
+
+- Playing with malwares and virus
+- Testing applications on a different OS
+- Specifying hardware resources you want to use
+
+#### 2.
 
