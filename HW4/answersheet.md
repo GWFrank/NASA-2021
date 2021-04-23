@@ -254,20 +254,63 @@ add an entry to the bottom with these configs:
 
 ### 1. 關於 Container
 
+> Refs:
+>
+> https://medium.com/@jinghua.shih/container-%E6%A6%82%E5%BF%B5%E7%AD%86%E8%A8%98-b0963ae2d7c6
+> https://ithelp.ithome.com.tw/articles/10216215
+> https://ithelp.ithome.com.tw/articles/10218127
+> https://ithelp.ithome.com.tw/articles/10219102
+> https://computingforgeeks.com/docker-vs-cri-o-vs-containerd/
+> https://www.tutorialworks.com/difference-docker-containerd-runc-crio-oci/
+> https://thenewstack.io/a-security-comparison-of-docker-cri-o-and-containerd/
+
 #### 1.
 
 When to use containers
 
 - A web backend environment that uses specific versions of Python, MySQL and Node.js.
 - An environment packed with your application to avoid any dependency issues.
-- An envrionment for students to practice programming without worrying compiler version issues
+- An environment for students to practice programming without worrying compiler version issues
 - An web server environment
 
-When to use VMs intead of containers
+When to use VMs instead of containers
 
 - Playing with malwares and virus
 - Testing applications on a different OS
 - Specifying hardware resources you want to use
 
 #### 2.
+
+OCI is a project that design and maintain specifications, about how different solutions of container should create and run containers. CRI is an interface between a container-orchestration system (like `Kubernetes`) and a container runtime (like `Docker`).
+
+`Docker` runs containers with OCI specs, and interacts with system `Kubernetes` through CRI.
+
+#### 3.
+
+`CRI-O` is a lightweight container runtime that is designed to work with `Kubernetes`. It provides only the necessary services to run a container and reduces excessive inter-process communications that other solutions might have.
+
+**`CRI-O` vs `Docker`**
+
+Common
+
+- Uses `runC` at the bottom level
+- Can be used with `Kubernetes`
+- Open Source
+
+Differences
+
+-  `CRI-O` directly uses `runC`. But `Docker Engine` calls `containerd` then `containerd` calls `runC`.
+- `CRI-O` directly talks to `Kubernetes` through CRI, but `Docker Engine` requires `Dockershim` (deprecated now).
+- `CRI-O` removes many linux capabilities such as SSH, but `Docker` keeps them.
+
+#### 4.
+
+```shell
+docker run --name nginx-server -d -p 8888:80 nginx:1.19.2
+```
+
+
+
+
+
 
