@@ -560,7 +560,7 @@ Second command:
 - `-e MYSQL_ROOT_PASSWORD=secret` sets environment variable in the container.
 - `mysql:5.7` is a `MySQL` image.
 
-docker-compose.yml:
+`docker-compose.yml`:
 
 ```yaml
 version: "3.8"
@@ -690,15 +690,13 @@ docker push generalwinter/dind-nasa-hw4:v1.0.0
 
 ## 6. Docker & Distributed System
 
+### 1.
+
 > Refs:
 >
 > https://github.com/twtrubiks/docker-swarm-tutorial
 > https://columns.chicken-house.net/2017/12/31/microservice9-servicediscovery/
 > https://web.archive.org/web/20200612023642if_/https://success.docker.com/article/networking#swarmnativeservicediscovery
-> https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/
-> https://github.com/twtrubiks/docker-swarm-tutorial
-
-### 1.
 
 ![sa-p6-1](/sa-p6-1.jpeg)
 
@@ -708,9 +706,96 @@ Service discovery in Docker Swarm is done with the DNS server embed in the Docke
 
 ---
 
+### 2.
 
+> Refs:
+>
+> https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/
+> https://github.com/twtrubiks/docker-swarm-tutorial
+> https://docs.genesys.com/Documentation/System/latest/DDG/InstallationofDockeronAlpineLinux
+> https://docs.docker.com/engine/swarm/manage-nodes/#add-or-remove-label-metadata
+> https://docs.docker.com/engine/swarm/stack-deploy/
+> https://docs.docker.com/compose/compose-file/compose-file-v3/
 
+#### (a)
 
+I choose alpine linux as the os for vm. Some special steps to install Docker on alpine are:
 
+```shell
+# before install
+vi /etc/apk/repositories # uncomment the url for community repositories
+# after install
+rc-update add docker boot # start docker at boot
+service docker start # manually start docker
+```
 
+#### (b)
 
+On manager vm:
+
+```shell
+docker swarm init --advertise-addr 192.168.50.146
+```
+
+`192.168.50.146` is the IP address of my manager vm. Docker will prompt some information after this command, and the command for joining as a worker would be shown.
+
+On worker vms
+
+```shell
+docker swarm join --token SWMTKN-1-0j4x20nk85imkbx005ry77uy1e3pksmjz9gl9wrgr8crmed76z-9yw549tc77iw8dv7f1kb7uk9y 192.168.50.146:2377
+```
+
+![sa-p6-2-b](/sa-p6-2-b.png)
+
+#### (c)
+
+Add labels with:
+
+```shell
+docker node update --label-add <label name> <node name>
+```
+
+![sa-p6-2-c](/sa-p6-2-c.png)
+
+#### (d)
+
+`docker-compose.yml`
+
+```yaml
+version: "3.8"
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - /data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    deploy:
+      mode: replicated
+      placement:
+        constraints: [node.labels.type == db]
+      replicas: 1
+
+  web:
+    image: nginx:1.19.2
+    deploy:
+      mode: replicated
+      placement:
+        constraints: [node.labels.type == web]
+      replicas: 2
+```
+
+On manager vm:
+
+```shell
+# docker-compose dependency
+apk add py-pip python3-dev libffi-dev openssl-dev gcc libc-dev rust cargo make
+pip install docker-compose
+# test docker-compose file before deploy
+docker-compose up -d
+docker-compose down
+# deploy to swarm
+docker stack deploy --compose-file docker-compose.yml nasa-hw4-p6
+```
+
+![sa-p6-2-d](/sa-p6-2-d.png)

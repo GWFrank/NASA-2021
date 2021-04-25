@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - /data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    deploy:
+      mode: replicated
+      placement:
+        constraints: [node.labels.type == db]
+      replicas: 1
+
+  web:
+    image: nginx:1.19.2
+    deploy:
+      mode: replicated
+      placement:
+        constraints: [node.labels.type == web]
+      replicas: 2
