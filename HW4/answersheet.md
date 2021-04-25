@@ -509,6 +509,10 @@ Because I am running Docker directly on linux, a network adapter `docker0` will 
 > https://docs.docker.com/compose/
 > https://docs.docker.com/engine/reference/commandline/run/#extended-description
 > https://docs.docker.com/storage/bind-mounts/
+> https://docs.microsoft.com/zh-tw/visualstudio/docker/tutorials/use-docker-compose
+> https://docs.docker.com/compose/networking/
+> https://docs.docker.com/compose/reference/
+> https://docs.docker.com/compose/reference/down/
 
 ### 1.
 
@@ -544,6 +548,7 @@ First command:
 - .`-p 3000:3000` forward port 3000 on host to port 3000 on container.
 - `-w /app` set working directory in the container to `/app`.
 - `-v ${PWD}:/app` "bind mounts: the current working directory on your host  to container's `/app`.
+- `--network nasa-net` connects the container to `nasa-net` network.
 - `-e MYSQL_HOST=mysql`, `-e MYSQL_USER=root`, and `-e MYSQL_PASSWORD=secret` set environment variables in the container.
 - `node:12-alpine` is a `Node.js` image on alpine linux.
 - `sh -c "echo helloworld"` is the `CMD` we are using.
@@ -555,23 +560,155 @@ Second command:
 - `-e MYSQL_ROOT_PASSWORD=secret` sets environment variable in the container.
 - `mysql:5.7` is a `MySQL` image.
 
-```shell
-dreamdream@nasa [~] docker run -p 3000:3000 \ # 
--w /app -v ${PWD}:/app \
---network nasa-net \
--e MYSQL_HOST=mysql \
--e MYSQL_USER=root \
--e MYSQL_PASSWORD=secret \
-node:12-alpine \
-sh -c "echo helloworld"
+docker-compose.yml:
 
-dreamdream@nasa [~] docker run \
---network nasa-net \
--v mysql-data:/var/lib/mysql \
--e MYSQL_ROOT_PASSWORD=secret \
-mysql:5.7
+```yaml
+version: "3.8"
+services:
+  app:
+    image: node:12-alpine
+    command: sh -c "echo helloworld"
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USE: root
+      MYSQL_PASSWORD: secret
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/var/liyamlb/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
 
+volumes:
+  mysql-data:
+
+networks:
+  default:
+    external:
+      name: nasa-net
 ```
+
+![sa-p4-3](/sa-p4-3.png)
+
+---
+
+### 4.
+
+#### (a)
+
+```shell
+docker-compose up -d
+```
+
+#### (b)
+
+```shell
+docker-compose pause
+```
+
+#### (c)
+
+```shell
+docker-compose down -v
+```
+
+`-v` is added to remove volumes. External networks and volumes won't be removed.
+
+---
+
+## 5. Docker in Docker
+
+> Refs:
+>
+> https://docs.docker.com/engine/install/ubuntu/
+> https://itnext.io/docker-in-docker-521958d34efd
+> https://ithelp.ithome.com.tw/articles/10191139
+
+### 1.
+
+```dockerfile
+FROM ubuntu:18.04
+RUN apt update
+RUN apt install -y apt-transport-https ca-certificates curl gnupg lsb-release
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+  | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+RUN echo \
+  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt update
+RUN apt install -y docker-ce docker-ce-cli containerd.io
+CMD docker run hello-world
+```
+
+---
+
+### 2.
+
+```shell
+docker build -t nested_docker .
+```
+
+`-t` is used to name the image. `.` is the path to `Dockerfile`.
+
+---
+
+### 3.
+
+```shell
+docker run --name dind -v /var/run/docker.sock:/var/run/docker.sock  nested_docker
+```
+
+Due to some [low-level issues and how docker is implemented](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/), running an completely isolated docker inside a docker container might requires some nasty hacks. However, in most cases we don't necessary need an completely isolated docker engine. If we expose docker socket of the outer docker to the inner (`-v /var/run/docker.sock:/var/run/docker.sock`), we would still be able to use docker inside a container.
+
+![sa-p5-3](/sa-p5-3.png)
+
+---
+
+### 4.
+
+```shell
+docker login
+docker tag nested_docker generalwinter/dind-nasa-hw4:v1.0.0
+docker push generalwinter/dind-nasa-hw4:v1.0.0
+```
+
+`docker login` to login the account that you will push your image to.
+
+`docker tag <original image name> <account name>/<upload image name>:<tag>`
+
+`docker push <account name>/<upload image name>:<tag>`
+
+![sa-p5-4](/sa-p5-4.png)
+
+---
+
+## 6. Docker & Distributed System
+
+> Refs:
+>
+> https://github.com/twtrubiks/docker-swarm-tutorial
+> https://columns.chicken-house.net/2017/12/31/microservice9-servicediscovery/
+> https://web.archive.org/web/20200612023642if_/https://success.docker.com/article/networking#swarmnativeservicediscovery
+> https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/
+> https://github.com/twtrubiks/docker-swarm-tutorial
+
+### 1.
+
+![sa-p6-1](/sa-p6-1.jpeg)
+
+A Docker Swarm is constructed with nodes, and there are two types of nodes, `Manager` and `Worker`. A `Manager` node deploys tasks to `Worker` nodes. When there are multiple `Manager` nodes, one of them would be the "leader" and other nodes will follow the leader. A `Worker` node receives tasks, do them, and tell `Manager` its status.
+
+Service discovery in Docker Swarm is done with the DNS server embed in the Docker Engine. Since containers are started with Docker, the engine can easily keep track of containers and update its DNS table for internal services. Queries are done by sending DNS query to engine's DNS server.
+
+---
+
+
 
 
 
