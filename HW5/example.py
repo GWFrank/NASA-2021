@@ -61,34 +61,32 @@ if __name__ == '__main__':
         s.connect((HOST, PORT))
         POW(s)
         print(recvUntil(s, ': ').decode(), end='')
-
+        interactive(s)
 
         # 5.
-        with open('rainbow.json') as json_file:
-            rainbow = json.load(json_file)
-        sendLine(s, "3")
-        for i in range(10):
-            task = recvUntil(s, ': ').decode()
-            print(task, end='')
-            q = task[-12:-4]
-            sendLine(s, str(rainbow[q]))
-            print(q, str(rainbow[q]))
-        interactive(s)
+        # with open('rainbow.json') as json_file:
+        #     rainbow = json.load(json_file)
+        # sendLine(s, "3")
+        # for i in range(10):
+        #     task = recvUntil(s, ': ').decode()
+        #     print(task, end='')
+        #     q = task[-12:-4]
+        #     sendLine(s, str(rainbow[q]))
+        #     print(q, str(rainbow[q]))
+        # interactive(s)
 
         # 3.
         # case_str = "1"
-        # for i in range(2, 7000):
+        # for i in range(2, 7200):
         #     if i%2 == 0:
         #         case_str = case_str+f" {i}"
         #     else:
         #         case_str = f"{i} "+case_str
-        
         # sendLine(s, "1")
-        # # print("hey1")
+        # print("")
         # print(recvUntil(s, ': ').decode(), end='')
-        # # print("hey2")
+        # print("")
         # sendLine(s, case_str)
-        # print("hey3")
-        # # print(recvUntil(s, ': ').decode(), end='')
+        # print("")
         # interactive(s)
 
