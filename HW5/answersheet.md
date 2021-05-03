@@ -202,7 +202,7 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 
 
 
-
+WiFi password: `0918273645`
 
 
 
