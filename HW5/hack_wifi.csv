@@ -1,0 +1,8 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+94:BF:C4:32:CC:88, 2021-05-03 14:10:10, 2021-05-03 14:10:36,  4, 195, WPA2, CCMP, PSK, -52,      251,      690,   0.  0.  0.  0,  18, Palace of Joe Tsai, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+40:9F:38:EC:8C:5B, 2021-05-03 14:10:10, 2021-05-03 14:10:36, -69,      505, 94:BF:C4:32:CC:88,
+8C:88:2B:00:73:6E, 2021-05-03 14:10:10, 2021-05-03 14:10:36, -62,      344, 94:BF:C4:32:CC:88,Palace of Joe Tsai
+

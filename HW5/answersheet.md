@@ -101,7 +101,7 @@ for i in range(10):
     print(q, str(rainbow[q]))
 ```
 
-
+---
 
 ## 4. 弱密碼
 
@@ -200,11 +200,17 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 
 ---
 
+## 5. WiFi Hacking
 
+### 1.
 
 WiFi password: `0918273645`
 
 
+
+### 2.
+
+Flag: `HW5{Jo3_Tsa1-7he_M4st3r_0F_Tra1niNg}`
 
 
 
