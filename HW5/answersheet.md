@@ -202,15 +202,38 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 
 ## 5. WiFi Hacking
 
+> Refs:
+>
+> b09902011 陳可邦
+> b09902100 林弘毅
+> https://null-byte.wonderhowto.com/how-to/hack-wi-fi-cracking-wpa2-psk-passwords-using-aircrack-ng-0148366/
+
 ### 1.
 
 WiFi password: `0918273645`
+
+```shell
+ifconfig # Find wifi interface, mine is wlo1
+sudo airmon-ng start wlo1
+ifconfig # wlo1 will be replaced with a new interface, mine is wlo1mon
+sudo airodump-ng
+```
+
+<截圖>
+
+An entry with ESSID `Palace of Joe Tsai` will show. That's our target.
+
+
 
 
 
 ### 2.
 
 Flag: `HW5{Jo3_Tsa1-7he_M4st3r_0F_Tra1niNg}`
+
+
+
+### 3.
 
 
 
