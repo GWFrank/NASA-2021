@@ -1,5 +1,5 @@
 ---
-typora-root-url: pics
+typora-root-url: pics/
 ---
 
 # NASA HW5
@@ -207,6 +207,8 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 > b09902011 陳可邦
 > b09902100 林弘毅
 > https://null-byte.wonderhowto.com/how-to/hack-wi-fi-cracking-wpa2-psk-passwords-using-aircrack-ng-0148366/
+> https://hackernoon.com/forcing-a-device-to-disconnect-from-wifi-using-a-deauthentication-attack-f664b9940142
+> https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2
 
 ### 1.
 
@@ -219,13 +221,33 @@ ifconfig # wlo1 will be replaced with a new interface, mine is wlo1mon
 sudo airodump-ng
 ```
 
-<截圖>
+![sec-p5-1](/sec-p5-1.png)
 
-An entry with ESSID `Palace of Joe Tsai` will show. That's our target.
+An entry with ESSID `Palace of Joe Tsai` is the AP. It has MAC address `94:BF:C4:32:CC:88` on channel `4`.
 
+```shell
+sudo airodump-ng wlo1mon --bssid 94:BF:C4:32:CC:88 -c 4 --write hack_wifi
+```
 
+This will capture traffics associated with `Palace of Joe Tsai` and dump them to some files named `hack_wifi`.
 
+Generated files are:
 
+```
+hack_wifi.cap
+hack_wifi.csv
+hack_wifi.kismet.csv
+hack_wifi.kismet.netxml
+hack_wifi.log.csv
+```
+
+Upload the `.cap` file to https://hashcat.net/cap2hccapx/ or download the execuable to convert it to `.hccapx` for hashcat. Mine has filename `hash_wifi.hccapx`.
+
+```shell
+./hashcat-6.1.0/hashcat.bin -m 2500 -a 3 hash_wifi.hccapx 09?d?d?d?d?d?d?d?d
+```
+
+![sec-p5-1-2](/sec-p5-1-2.png)
 
 ### 2.
 
@@ -235,7 +257,9 @@ Flag: `HW5{Jo3_Tsa1-7he_M4st3r_0F_Tra1niNg}`
 
 ### 3.
 
+Flag: `HW5{j0e_ts4I_1s_d0ub1e_gun_k4i's_b3st_fr13nD}`
 
+Router MAC address: `94:BF:C4:32:CC:88` Channel: `4`
 
 
 
