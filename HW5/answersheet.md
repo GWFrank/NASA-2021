@@ -8,6 +8,56 @@ b09902004 郭懷元
 
 # Security
 
+## 1. Threat Modeling
+
+### (1)
+
+**Assumption**
+
+- The ship works as supposed.
+- Any lost of cargo isn't acceptable.
+- Not considering natural disasters such as typhoons and tsunami.
+
+| Threat Model                    | Countermeasure                                  |
+| ------------------------------- | ----------------------------------------------- |
+| Pirates attack the ship         | Ask for navy's protection                       |
+| Auto-pilot system gets attacked | Always keep the pilot aware of the ship's state |
+
+### (2)
+
+**Assumption**
+
+- No violence is involved.
+
+| Threat Model                                   | Countermeasure                                               |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| Customer sneaks out the restaurant             | Ask customers to pay first                                   |
+| Customer tries bring people in that didn't pay | Give customer who have paid a wrist band for identification. Only people with it can get tableware. |
+
+### (3)
+
+**Assumption**
+
+- A team competition.
+- Discussion between different teams and using internet resources are illegal.
+- PCs in R204 work normally.
+
+| Threat Model                                             | Countermeasure                                     |
+| -------------------------------------------------------- | -------------------------------------------------- |
+| Participants bring cellphones and laptops to communicate | Ban use of electronic devices other than R204's PC |
+| Participants discuss when going to restroom              | Allow only one team to leave R204 at a time.       |
+
+### (4)
+
+**Assumption**
+
+| Threat Model | Countermeasure |
+| ------------ | -------------- |
+|              |                |
+|              |                |
+
+
+
 ## 2. Proof of Work & DoS 
 
 ### 3.
@@ -178,7 +228,8 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 
 ### 3.
 
-1. 
+1. Use hardware key authentication. For example, the "Security Key" option in Windows 10 login option.
+2. Use multi-factor authentication.
 
 ## 5. WiFi Hacking
 
