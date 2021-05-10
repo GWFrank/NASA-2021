@@ -10,7 +10,7 @@ b09902004 郭懷元
 
 ## 1. Threat Modeling
 
-### (1)
+### 1
 
 **Assumption**
 
@@ -23,7 +23,7 @@ b09902004 郭懷元
 | Pirates attack the ship         | Ask for navy's protection                       |
 | Auto-pilot system gets attacked | Always keep the pilot aware of the ship's state |
 
-### (2)
+### 2
 
 **Assumption**
 
@@ -34,7 +34,7 @@ b09902004 郭懷元
 | Customer sneaks out the restaurant             | Ask customers to pay first                                   |
 | Customer tries bring people in that didn't pay | Give customer who have paid a wrist band for identification. Only people with it can get tableware. |
 
-### (3)
+### 3
 
 **Assumption**
 
@@ -47,28 +47,56 @@ b09902004 郭懷元
 | Participants bring cellphones and laptops to communicate | Ban use of electronic devices other than R204's PC |
 | Participants discuss when going to restroom              | Allow only one team to leave R204 at a time.       |
 
-### (4)
+### 4
 
 **Assumption**
 
-| Threat Model | Countermeasure |
-| ------------ | -------------- |
-|              |                |
-|              |                |
+- Power system is normal.
 
+| Threat Model                                  | Countermeasure                                            |
+| --------------------------------------------- | --------------------------------------------------------- |
+| Intruders break doors to get in               | Set alarms to go off when destruction is detected         |
+| Intruders go in with people with access cards | Have security guards to make sure people going one by one |
+
+### 5
+
+**Assumption**
+
+- No physical violence.
+
+
+| Threat Model                                                 | Countermeasure                                   |
+| ------------------------------------------------------------ | ------------------------------------------------ |
+| Malicious people try to dump out password hash and crack it  | Use a second factor hardware key to authenticate |
+| Malicious people use hardware key and password given to allowed people. | Use biometrics authentication                    |
 
 
 ## 2. Proof of Work & DoS 
 
 ### 1.
 
+> Refs:
+>
+> https://en.wikipedia.org/wiki/Denial-of-service_attack
 
+A DoS attack aims to keep other users from using the victim's service by exhausting the victim server's computation resources or bandwidth.
+
+A DDoS attack is a type of DoS attack. The attacker uses multiple IPs and machines to attack the victim's servers.
+
+DDoS attack is a subset of DoS attack.
 
 ---
 
 ### 2.
 
+> Refs:
+>
+> https://en.wikipedia.org/wiki/Proof_of_work
+> https://en.wikipedia.org/wiki/Proof_of_space
 
+A PoW challenge requires the user to spend a considerable amount of computation resources to prove that they really  want to use the service. The challenge is usually hard to solve but easy to verify, therefore hash functions are commonly used in PoW.
+
+Proof of space is similar to proof of work, but a user need to have storage space instead of computation resources. Some new cryptocurrencies uses proof of space instead of proof of work.
 
 ---
 
@@ -138,6 +166,25 @@ Because `proof_of_work()` the random number fed to hash only ranges from `0` to 
 Code to generate lookup table is in `gen_rainbow.py`. Code based on `example.py` to obtain the flag is in `p2-5.py`. Run `python gen_rainbow.py` first to generate the data needed.
 
 ![sec-p2-5](/sec-p2-5.png)
+
+---
+
+## 3. SA 知識問答
+
+### 1.
+
+> Refs:
+>
+> https://ithelp.ithome.com.tw/articles/10248302
+> https://www.kshuang.xyz/doku.php/operating_system:nix_suid_sgid_in_unix
+
+If `SUID` is set on a binary file, when a user executes the file, that user will have the same permission as the binary's owner during the process.
+
+
+
+
+
+
 
 ---
 
@@ -240,8 +287,14 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 
 ### 3.
 
+> Refs:
+>
+> None
+
 1. Use hardware key authentication. For example, the "Security Key" option in Windows 10 login option.
 2. Use multi-factor authentication.
+
+---
 
 ## 5. WiFi Hacking
 
