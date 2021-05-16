@@ -10,6 +10,10 @@ b09902004 郭懷元
 
 ## 1. Threat Modeling
 
+> Refs:
+>
+> None
+
 ### 1
 
 **Assumption**
@@ -178,13 +182,85 @@ Code to generate lookup table is in `gen_rainbow.py`. Code based on `example.py`
 > https://ithelp.ithome.com.tw/articles/10248302
 > https://www.kshuang.xyz/doku.php/operating_system:nix_suid_sgid_in_unix
 
-If `SUID` is set on a binary file, when a user executes the file, that user will have the same permission as the binary's owner during the process.
+If `SUID` is set on a binary file, when a user executes the file, that user will have the same permission as the binary's owner during the process. `SGID` is like the "group" version of `SUID`, giving user the group of the binary when executing. `SGID` can also be set on a directory. In that case, a user would have the same group as the directory when he's in that directory.
 
+These two file permissions might accidently give normal users root permission to do anything. If the binary isn't well-coded, it could allow malicious users inject arbitrary code and execute them as root user.
 
+---
 
+### 2.
 
+> Refs:
+>
+> https://unix.stackexchange.com/questions/127432/logging-ssh-access-attempts
+> https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
+> http://linux.vbird.org/linux_basic/0570syslog/0570syslog.php
 
+For Ubuntu/Debian based distro, it's in `/var/log/auth.log`.
 
+For RHEL/Cent OS, it's in `/var/log/secure`.
+
+`/var/log/auth.log` logs information related to authentication, such as telnet, ftp, ssh, pop3, sudo.
+
+`/var/log/secure` logs similar information to `/var/log/auth.log`.
+
+A more inter-distro solution is to use `journalctl` to view the log.
+
+---
+
+### 3.
+
+> Refs:
+>
+> https://unix.stackexchange.com/questions/70684/where-are-sudo-incidents-logged
+> https://askubuntu.com/questions/641049/who-are-incidents-really-reported-to-and-how-can-a-sudo-user-access-the-reports
+> https://stackoverflow.com/questions/13546933/where-are-sudo-incidents-reported
+
+~~Santa Claus~~
+
+In most distros, if root user's mail is configured, an email to be sent to notify. The incident would also be logged in a log file.
+
+For Ubuntu/Debian based distro, it's in `/var/log/auth.log`.
+
+For RHEL/Cent OS, it's in `/var/log/secure`.
+
+Same as last problem, `journalctl` is a more general solution.
+
+---
+
+### 4.
+
+> Refs:
+>
+> https://unix.stackexchange.com/questions/314725/what-is-the-difference-between-user-and-service-account
+> https://unix.stackexchange.com/questions/115177/how-come-each-program-or-service-has-an-account-of-its-own-in-etc-passwd/115184
+> https://unix.stackexchange.com/questions/197124/why-are-there-many-accounts-im-the-only-user/197155
+
+Creating accounts for services allows better isolation of resources between different services, and also prevents giving unnecessary permissions.
+
+When all services run under `root`, if one of the services has some severe security bug, attackers might be able to exploit that and start a full system attack.
+
+---
+
+### 5.
+
+> Refs:
+>
+> https://medium.com/@vicxu/%E6%B7%BA%E8%AB%87-authentication-%E4%B8%AD%E9%9B%86-token-based-authentication-90139fbcb897
+
+**Token-based**
+
+| Pros                                        | Cons                                                         |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| Difficult to brute-force                    | Adding new devices isn't trivial if using all token-based auth |
+| No worrying about things like smudge attack | Token leak is much more severe than password hash leak       |
+
+**Password**
+
+| Pros                       | Cons                                                     |
+| -------------------------- | -------------------------------------------------------- |
+| Easy to use across devices | Brute-force or dictionary attack could happen            |
+| Low effort to deploy       | Actual security might be reduced due to human's laziness |
 
 ---
 
@@ -394,4 +470,147 @@ Then check the web page with another device.
 ![sec-p5-3-2](/sec-p5-3-2.png)
 
 ---
+
+> ========= 封鎖線 =========
+> ||               前方施工中               ||
+> ========= 封鎖線 =========
+
+---
+
+# LDAP
+
+## 1. Basic Setup
+
+> Refs:
+>
+> Lab slides
+
+Files used: `suffix.ldif`, `root.ldif`, `base.ldif`
+
+Root Password: `nasa2021`
+
+Simply follow the slides and change some names.
+
+```shell
+ldapmodify -Y EXTERNAL -H ldapi:/// -f suffix.ldif
+slappasswd
+ldapmodify -Y EXTERNAL -H ldapi:/// -f root.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f base.ldif
+```
+
+![ldap-p1-1](/ldap-p1-1.png)
+
+---
+
+## 2. Client
+
+> Refs:
+>
+> https://pastleo.me/post/20200719-archlinux-installation
+> https://coodie-h.blogspot.com/2017/09/centos-7openldap.html
+> http://dic.vbird.tw/linux_server/unit07.php
+> https://www.itzgeek.com/how-tos/linux/centos-how-tos/configure-openldap-with-ssl-on-centos-7-rhel-7.html
+> https://wiki.archlinux.org/title/LDAP_authentication#Online_and_Offline_Authentication_with_SSSD
+
+### LDAP over TLS & Client setup
+
+Files used: `certs.ldif`
+
+CentOS server IP: `192.168.50.99`
+
+CentOS server hostname: `centos-server`
+
+On both machine, add an entry to `/etc/hosts`:
+
+```
+192.168.50.99	centos-server
+```
+
+On CentOS server:
+
+```shell
+cd /etc/openldap/certs
+openssl req -new -x509 -nodes -out pub.pem -keyout pkey.pem -days 365
+# In openssl's prompt, set "common name" to "centos-server"
+chown -R ldap:ldap *.pem
+ldapmodify -Y EXTERNAL -H ldapi:/// -f certs.ldif
+vim /etc/sysconfig/slapd
+```
+
+Change `SLAPD_URLS` in `/etc/sysconfig/slapd`:
+
+```
+SLAPD_URLS="ldapi:/// ldap:/// ldaps:///"
+```
+
+Add ldap and ldaps to allowed services in firewall setting.
+
+```shell
+firewall-cmd --permanent --add-service=ldap
+firewall-cmd --permanent --add-service=ldaps
+firewall-cmd --reload
+systemctl restart slapd
+```
+
+On Arch client:
+
+```shell
+pacman -S openldap
+systemctl start slapd
+systemctl enable slapd
+vim /etc/openldap/ldap.conf
+```
+
+Add these lines in `/etc/openldap/ldap.conf`:
+
+```
+TLS_REQCERT	allow
+BASE		dc=giver,dc=csie,dc=ntu
+URI			ldaps://centos-server:636
+```
+
+### Enable SSSD
+
+For most of the part, simply follow [this](https://wiki.archlinux.org/title/LDAP_authentication#Online_and_Offline_Authentication_with_SSSD).
+
+`/etc/sssd/sssd.conf` should looks like this:
+
+```
+[sssd]
+config_file_version = 2
+services = nss, pam, sudo
+domains = LDAP
+
+[domain/LDAP]
+id_provider = ldap
+auth_provider = ldap
+
+ldap_uri = ldap://centos-server:389
+ldap_search_base = dc=giver,dc=csie,dc=ntu
+cache_credentials = true
+```
+
+(I didn't use tls because ~~I couldn't fix the certification issue~~ it's just a test environment
+
+
+
+
+
+
+**Create users, groups**
+
+Files used: `stu-group.ldif`, `stu00.ldif`, `ta-group.ldif`, `ta00.ldif`
+
+`stu00` pw: `0000`
+
+ `ta00` pw: `0000`
+
+
+
+
+
+![ldap-p2-1](/ldap-p2-1.png)
 

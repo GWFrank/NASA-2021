@@ -1,0 +1,12 @@
+dn: uid=stu00,ou=people,dc=giver,dc=csie,dc=ntu
+objectClass: top
+objectClass: account
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: stu00
+uid: stu00
+uidNumber: 48763
+gidNumber: 200
+homeDirectory: /home/stu00
+loginShell: /bin/bash
+userPassword: {SSHA}DhwArxqFwRb78RENOpX49Chk2Dwdgdi6

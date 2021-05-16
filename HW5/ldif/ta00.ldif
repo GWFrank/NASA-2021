@@ -1,0 +1,12 @@
+dn: uid=ta00,ou=people,dc=giver,dc=csie,dc=ntu
+objectClass: top
+objectClass: account
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: ta00
+uid: ta00
+uidNumber: 38763
+gidNumber: 201
+homeDirectory: /home/ta00
+loginShell: /bin/bash
+userPassword: {SSHA}DhwArxqFwRb78RENOpX49Chk2Dwdgdi6
