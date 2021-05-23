@@ -471,13 +471,12 @@ Then check the web page with another device.
 
 ---
 
-> ========= 封鎖線 =========
-> ||               前方施工中               ||
-> ========= 封鎖線 =========
-
----
 
 # LDAP
+
+> Note:
+>
+> `.ldif` and `.schema` files are in `ldif/`. `.py` files are in `ldap-script/`.
 
 ## 1. Basic Setup
 
@@ -485,11 +484,9 @@ Then check the web page with another device.
 >
 > Lab slides
 
-Files used: `suffix.ldif`, `root.ldif`, `base.ldif`
+Create `suffix.ldif`, `root.ldif`, `base.ldif`.
 
-Root Password: `nasa2021`
-
-Simply follow the slides and change some names.
+Then run these commands:
 
 ```shell
 ldapmodify -Y EXTERNAL -H ldapi:/// -f suffix.ldif
@@ -512,47 +509,34 @@ ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f base.ldif
 > https://pastleo.me/post/20200719-archlinux-installation
 > https://coodie-h.blogspot.com/2017/09/centos-7openldap.html
 > http://dic.vbird.tw/linux_server/unit07.php
-> https://www.itzgeek.com/how-tos/linux/centos-how-tos/configure-openldap-with-ssl-on-centos-7-rhel-7.html
 > https://wiki.archlinux.org/title/LDAP_authentication#Online_and_Offline_Authentication_with_SSSD
+> https://wiki.archlinux.org/title/Sudo#Using_visudo
+> https://bbs.archlinux.org/viewtopic.php?id=245004
+> https://unix.stackexchange.com/questions/196829/read-files-directly-vs-getent
 
-### LDAP over TLS & Client setup
+### Setup LDAP client
 
-Files used: `certs.ldif`
-
-CentOS server IP: `192.168.50.99`
-
-CentOS server hostname: `centos-server`
-
-On both machine, add an entry to `/etc/hosts`:
+On both machines, add this line to `/etc/hosts`
 
 ```
-192.168.50.99	centos-server
+192.168.50.99  centos-server
 ```
 
 On CentOS server:
 
-```shell
-cd /etc/openldap/certs
-openssl req -new -x509 -nodes -out pub.pem -keyout pkey.pem -days 365
-# In openssl's prompt, set "common name" to "centos-server"
-chown -R ldap:ldap *.pem
-ldapmodify -Y EXTERNAL -H ldapi:/// -f certs.ldif
-vim /etc/sysconfig/slapd
-```
 
-Change `SLAPD_URLS` in `/etc/sysconfig/slapd`:
-
-```
-SLAPD_URLS="ldapi:/// ldap:/// ldaps:///"
-```
-
-Add ldap and ldaps to allowed services in firewall setting.
+Add ldap to allowed services in firewall setting.
 
 ```shell
 firewall-cmd --permanent --add-service=ldap
-firewall-cmd --permanent --add-service=ldaps
 firewall-cmd --reload
-systemctl restart slapd
+```
+
+Add these lines in `/etc/openldap/ldap.conf`:
+
+```
+BASE		dc=giver,dc=csie,dc=ntu
+URI			ldap:///
 ```
 
 On Arch client:
@@ -567,14 +551,15 @@ vim /etc/openldap/ldap.conf
 Add these lines in `/etc/openldap/ldap.conf`:
 
 ```
-TLS_REQCERT	allow
 BASE		dc=giver,dc=csie,dc=ntu
-URI			ldaps://centos-server:636
+URI			ldap://centos-server
 ```
 
-### Enable SSSD
+---
 
-For most of the part, simply follow [this](https://wiki.archlinux.org/title/LDAP_authentication#Online_and_Offline_Authentication_with_SSSD).
+### Enable SSSD with LDAP
+
+For most of the part, simply follow [this guide on arch linux wiki](https://wiki.archlinux.org/title/LDAP_authentication#Online_and_Offline_Authentication_with_SSSD). Don't edit `/etc/pam.d/sudo`, just leave it by default.
 
 `/etc/sssd/sssd.conf` should looks like this:
 
@@ -585,32 +570,362 @@ services = nss, pam, sudo
 domains = LDAP
 
 [domain/LDAP]
+cache_credentials = true
+enumerate = true
+
 id_provider = ldap
 auth_provider = ldap
 
-ldap_uri = ldap://centos-server:389
+ldap_uri = ldap://centos-server
 ldap_search_base = dc=giver,dc=csie,dc=ntu
-cache_credentials = true
+chpass_provider = ldap
+ldap_chpass_uri = ldap://centos-server
+entry_cache_timeout = 600
+ldap_network_timeout = 2
+
+ldap_tls_reqcert = never
 ```
 
-(I didn't use tls because ~~I couldn't fix the certification issue~~ it's just a test environment
+(I didn't use certification for tls because ~~I couldn't fix the issue~~ it's just a test environment
 
+---
 
+### Create users, groups
 
+Create `stu-group.ldif`, `ta-group.ldif`
 
+```
+dn: cn=student,ou=group,dc=giver,dc=csie,dc=ntu
+objectClass: posixGroup
+objectClass: top
+gidNumber: 200
+```
 
+```
+dn: cn=ta,ou=group,dc=giver,dc=csie,dc=ntu
+objectClass: posixGroup
+objectClass: top
+gidNumber: 201
+```
 
-**Create users, groups**
+Create `stu00.ldif`, `ta00.ldif`
 
-Files used: `stu-group.ldif`, `stu00.ldif`, `ta-group.ldif`, `ta00.ldif`
+On server:
 
-`stu00` pw: `0000`
+```shell
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f stu-group.ldif
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f ta-group.ldif
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f stu00.ldif
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f ta00.ldif
+```
 
- `ta00` pw: `0000`
+![ldap-p2-2](/ldap-p2-2.png)
 
+---
 
+### Setup sudo permission
 
+On client:
 
+```shell
+EDITOR=vim visudo
+```
 
-![ldap-p2-1](/ldap-p2-1.png)
+Add this line:
 
+```
+%ta ALL=(ALL) NOPASSWD: ALL
+```
+
+![ldap-p2-3](/ldap-p2-3.png)
+
+---
+
+### `passwd` difference
+
+`getent passwd` will look up both local users and external users (e.g. LDAP).
+
+`/etc/passwd` only stores local users, therefore users created with LDAP won't be found.
+
+---
+
+## 3. Schema
+
+> Refs:
+>
+> https://guillaumemaka.com/2013/07/17/openldap-create-a-custom-ldap-schema/
+> https://www.openldap.org/doc/admin22/schema.html
+
+### Add custom attributes and schemas
+
+On server, create `giver-problem.schema`
+
+Then create `test.conf`
+
+```
+include /etc/openldap/schema/core.schema
+include /etc/openldap/schema/cosine.schema
+include /etc/openldap/schema/nis.schema
+include /etc/openldap/schema/inetorgperson.schema
+include /root/giver-problem.schema
+```
+
+Then run these commands
+
+```shell
+slaptest -f ~/test.conf -F /tmp/ldap_config
+cp \
+/tmp/ldap_config/cn\=config/cn\=schema/cn={4}giver-problem.ldif \
+/etc/openldap/slapd.d/cn\=config/cn\=schema/
+chown \
+ldap:ldap \
+/etc/openldap/slapd.d/cn\=config/cn\=schema/cn={4}giver-problem.ldif
+systemctl restart slapd
+```
+
+---
+
+### Create problem group and objects
+
+Create `gen-problem.ldif`
+
+```
+dn: ou=problem,dc=giver,dc=csie,dc=ntu
+objectClass: organizationalUnit
+ou: problem
+```
+
+Create `p00.ldif`, `p01.ldif`
+
+Then run these commands:
+
+```shell
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f gen-problem.ldif
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f p00.ldif
+ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f p01.ldif
+```
+
+![ldap-p3](/ldap-p3.png)
+
+---
+
+## 4. Access Control
+
+> Refs:
+>
+> https://www.openldap.org/doc/admin24/access-control.html
+> https://unix.stackexchange.com/questions/444332/how-to-restrict-user-based-on-ip-address-in-openldap
+
+Create `manage-access.ldif`
+
+`ipv6` entries are added because when I found that the server machine is using ipv6 to send queries.
+
+Then run these command
+
+```shell
+ldapmodify -Y EXTERNAL -H ldapi:/// -f manage-access.ldif
+```
+
+---
+
+## 5. Multiple LDAP Servers
+
+> Refs:
+>
+> https://serverfault.com/questions/730088/how-to-migrate-ldap-database-schema-configuration-to-other-machine
+> https://www.jianshu.com/p/34dc6412de30
+> https://www.openldap.org/doc/admin24/replication.html#MirrorMode
+
+### Clone server settings
+
+On all three machines, add this line to `/etc/hosts`
+
+```
+192.168.50.106 centos-server-2
+```
+
+On the original server:
+
+```shell
+systemctl stop slapd
+slapcat -n 0 -l clone-config.backup
+slapcat -n 2 -l clone-data.backup # -n is 2 because that's how we set it in suffix.ldif
+sftp root@centos-server-2
+sftp> put clone-config.backup
+sftp> put clone-data.backup
+stfp> exit
+systemctl start slapd
+```
+
+On new server:
+
+```shell
+systemctl stop slapd
+rm -rf /etc/openldap/slapd.d
+mkdir /etc/openldap/slapd.d
+slapadd -n 0 -F /etc/openldap/slapd.d -l clone-config.backup
+slapadd -n 2 -F /etc/openldap/slapd.d -l clone-data.backup
+chown -R ldap:ldap /etc/openldap/slapd.d
+chmod 755 /etc/openldap/slapd.d
+chown ldap:ldap /var/lib/ldap/*
+systemctl start slapd
+```
+
+---
+
+### Enable mirror mode
+
+Create `mod_syncprov.ldif`
+
+```
+dn: cn=module,cn=config
+objectClass: olcModuleList
+cn: module
+olcModulePath: /usr/lib64/openldap
+olcModuleLoad: syncprov.la
+```
+
+Create `syncprov.ldif`
+
+```
+dn: olcOverlay=syncprov,olcDatabase={2}hdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcSyncProvConfig
+olcOverlay: syncprov
+olvSpCheckpoint: 100 10
+olcSpSessionLog: 100
+```
+
+On both servers, run these commands
+
+```shell
+ldapadd -Y EXTERNAL -H ldapi:/// -f mod_syncprov.ldif
+ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
+```
+
+Create `node01.ldif` on old server
+
+Create `node02.ldif` on new server
+
+```
+# every line is the same as node01.ldif except these two
+...
+olcServerID: 2
+...
+    provider=ldap://centos-server
+...
+```
+
+On old server:
+
+```shell
+ldapadd -Y EXTERNAL -H ldapi:/// -f node01.ldif
+```
+
+On new server:
+
+```shell
+ldapadd -Y EXTERNAL -H ldapi:/// -f node02.ldif
+```
+
+---
+
+## 6. Scripting
+
+> Refs:
+>
+> https://www.python-ldap.org/en/python-ldap-3.3.0/reference/ldap.html
+> https://iter01.com/363962.html
+>https://stackoverflow.com/questions/29586435/openldap-how-to-disable-enable-remove-user-account
+
+### Requirements
+
+`python 2.7` with module `python-ldap` installed
+
+### Add new users
+
+#### File
+
+`new-user.py`
+
+#### Usage
+
+```shell
+python new-user.py
+```
+
+The program will ask you to enter the username and if the user is TA. The password of new user is the same as their username.
+
+In the script you will find this area:
+
+```python
+server_ip = "localhost"
+stu_gid = "200"
+ta_gid = "201"
+```
+
+Change these values if needed.
+
+#### Demo
+
+<img src="/ldap-p6-1.png" alt="ldap-p6-1" style="zoom: 67%;" />
+
+---
+
+### Lock / unlock user
+
+#### File
+
+`lock-user.py`
+
+#### Usage
+
+```shell
+python lock-user.py
+```
+
+The program will ask you if you are locking or unlocking a user. Enter `y` if locking, `n` if unlocking. Then enter the username you are managing.
+
+In the script you will find this area
+
+```python
+server_ip = "localhost"
+```
+
+Change the value if needed.
+
+#### Some details
+
+The program lock the user by adding `LOCKED`  in front of the `userPassword`. That is, changing it from `{SSHA}<hash value>` to `LOCKED{SSHA}<hash value>`. Unlocking is by removing the `LOCKED` at head.
+
+Doing multiple locks will add more `LOCKED`, but unlocking an account will delete all `LOCKED` at once.
+
+This method is a bit dirty and doesn't prevent user from using ssh-key, but can be done without changing the LDAP server infrastructure. Using [password-policy overlay](http://www.openldap.org/software/man.cgi?query=slapo-ppolicy&sektion=5&apropos=0&manpath=OpenLDAP+2.3-Release) could be a nicer solution, but requires some work on configuring the server.
+
+#### Demo
+
+![ldap-p6-2](/ldap-p6-2.png)
+
+---
+
+### Change name
+
+#### File
+
+`change-name.py`
+
+#### Usage
+
+```shell
+python change-name.py
+```
+
+The program will ask you to enter your username, password, and the new `givenName`.
+
+In the script you will find this area
+
+```python
+server_ip = "localhost"
+```
+
+Change this if needed.

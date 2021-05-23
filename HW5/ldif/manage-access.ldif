@@ -1,0 +1,38 @@
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: to attrs=userPassword
+    by      self                        write
+    by      *                           none
+-
+add: olcAccess
+olcAccess: to attrs=homeDirectory,uidNumber,gidNumber
+    by      peername.ip=192.168.50.201  read
+    by      peername.ip=127.0.0.1       read
+    by      peername.ipv6=::1           read
+-
+add: olcAccess
+olcAccess: to attrs=problemSolution
+    by      peername.ip=127.0.0.1       read
+    by      peername.ipv6=::1           read
+    by      *                           none
+-
+add: olcAccess
+olcAccess: to dn.one="ou=problem,dc=giver,dc=csie,dc=ntu" filter=(problemVisibility=private)
+    by      peername.ip=192.168.50.201  none
+    by      peername.ip=127.0.0.1       read
+    by      peername.ipv6=::1           read
+-
+add: olcAccess
+olcAccess: to dn.one="ou=problem,dc=giver,dc=csie,dc=ntu" filter=(problemVisibility=public)
+    by      peername.ip=192.168.50.201  read
+    by      peername.ip=127.0.0.1       read
+    by      peername.ipv6=::1           read
+-
+add: olcAccess
+olcAccess: to *
+    by      self                        write
+    by      peername.ip=192.168.50.201  read
+    by      peername.ip=127.0.0.1       read
+    by      peername.ipv6=::1           read
+    by      *                           none

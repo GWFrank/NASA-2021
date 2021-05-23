@@ -1,0 +1,4 @@
+dn: cn=student,ou=group,dc=giver,dc=csie,dc=ntu
+objectClass: posixGroup
+objectClass: top
+gidNumber: 200

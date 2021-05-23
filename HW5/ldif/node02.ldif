@@ -1,0 +1,20 @@
+dn: cn=config
+changetype: modify
+replace: olcServerID
+olcServerID: 2
+
+dn: olcDatabase={2}hdb,cn=config
+changetype: modify
+replace: olcSyncRepl
+olcSyncRepl:    rid=001
+    provider=ldap://centos-server
+    bindmethod=simple
+    binddn="cn=giver,dc=giver,dc=csie,dc=ntu"
+    credentials=nasa2021
+    searchbase="dc=giver,dc=csie,dc=ntu"
+    schemachecking=on
+    type=refreshAndPersist
+    retry="5 5 60 +"
+-
+add: olcMirrorMode
+olcMirrorMode: TRUE

@@ -1,0 +1,4 @@
+dn: cn=ta,ou=group,dc=giver,dc=csie,dc=ntu
+objectClass: posixGroup
+objectClass: top
+gidNumber: 201

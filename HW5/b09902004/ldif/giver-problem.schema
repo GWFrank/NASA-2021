@@ -1,0 +1,39 @@
+attributetype (
+        1.1.4.8.7.6.3.10.1
+        NAME 'problemName'
+        DESC 'Problem Name'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+attributetype (
+        1.1.4.8.7.6.3.10.2
+        NAME 'problemDescription'
+        DESC 'Problem Description'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+attributetype (
+        1.1.4.8.7.6.3.10.3
+        NAME 'problemVisibility'
+        DESC 'Problem Visibility'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+attributetype (
+        1.1.4.8.7.6.3.10.4
+        NAME 'problemSolution'
+        DESC 'Problem Solution'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32768} )
+
+objectClass (
+        1.1.4.8.7.6.3
+        NAME 'giverProblem'
+        DESC 'giver problems'
+        SUP top
+        MUST ( problemName $ problemDescription $ problemVisibility $ cn )
+        MAY ( problemSolution $ ou ) )

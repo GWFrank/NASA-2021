@@ -1,0 +1,17 @@
+dn: dc=giver,dc=csie,dc=ntu
+dc: giver
+objectClass: top
+objectClass: domain
+
+dn: cn=giver,dc=giver,dc=csie,dc=ntu
+objectClass: organizationalRole
+cn: giver
+description: admin
+
+dn: ou=people,dc=giver,dc=csie,dc=ntu
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=group,dc=giver,dc=csie,dc=ntu
+objectClass: organizationalUnit
+ou: group
