@@ -227,3 +227,65 @@ After the OS is installed, the NAT interface can be removed so that test result 
 
 ## 2. Short Answer
 
+
+
+
+
+
+
+---
+
+# System Administration
+
+## 1. This Problem Is Not For Sale
+
+### 1.1 Using a Saddle? Shame on You!
+
+> Refs:
+>
+> https://qizhanming.com/blog/2018/08/08/how-to-install-nfs-on-centos-7
+
+flag: `NASA{M0un71n6_NF5!2021}`
+
+#### On workstation:
+
+Create a `.qcow2` disk for VM
+
+```shell
+mkdir -p /tmp2/b09902004/img
+cd /tmp2/b09902004/img
+qemu-img create -f qcow2 nfs.qcow2 10G
+```
+
+Install VM with `virt-install` (basically copy-paste from previous homework)
+
+```shell
+virt-install \
+--name centos-1 \
+--ram 2048 \
+--vcpus 2 \
+--disk /tmp2/b09902004/img/nfs.qcow2 \
+--location http://centos.cs.nctu.edu.tw/7.9.2009/os/x86_64/ \
+--extra-args="console=tty0 console=ttyS0,115200n8" \
+--nographics
+```
+
+#### On VM
+
+Install `nfs-utils`, setup the firewall
+
+```shell
+yum install -y nfs-utils
+systemctl enable --now rpcbind
+firewall-cmd --permanent --add-service={rpc-bind,mountd,nfs}
+firewall-cmd --reload
+```
+
+Mount and get the flag
+
+```shell
+mount.nfs 10.217.44.112:/e/NASA_flag /mnt
+cd /mnt
+cat flag
+```
+
