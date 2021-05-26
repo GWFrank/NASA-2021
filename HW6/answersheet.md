@@ -247,7 +247,7 @@ After the OS is installed, the NAT interface can be removed so that test result 
 
 flag: `NASA{M0un71n6_NF5!2021}`
 
-#### On workstation:
+#### On workstation
 
 Create a `.qcow2` disk for VM
 
@@ -289,7 +289,11 @@ cd /mnt
 cat flag
 ```
 
+#### Failed attempts
 
+- Directly mount on workstation
+- Docker
+- Use VPN
 
 ---
 
@@ -378,13 +382,6 @@ Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
 ---
 
 ### 2.2 Is It Wrong to Try to Recycle Midterm Problems?
-
-
-
-
-
-
-
 
 
 
