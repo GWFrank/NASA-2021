@@ -247,7 +247,7 @@ After the OS is installed, the NAT interface can be removed so that test result 
 
 flag: `NASA{M0un71n6_NF5!2021}`
 
-#### On workstation:
+#### On workstation
 
 Create a `.qcow2` disk for VM
 
@@ -288,4 +288,14 @@ mount.nfs 10.217.44.112:/e/NASA_flag /mnt
 cd /mnt
 cat flag
 ```
+
+#### Failed attempts
+
+- Directly mount on workstation
+- Docker
+- Use VPN
+
+---
+
+
 
