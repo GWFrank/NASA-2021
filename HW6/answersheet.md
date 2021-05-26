@@ -289,3 +289,103 @@ cd /mnt
 cat flag
 ```
 
+
+
+---
+
+## 2. Getting Your Fix of VMs
+
+### 2.1 Does It Boot?
+
+> Refs:
+>
+> https://www.linux.com/training-tutorials/how-rescue-non-booting-grub-2-linux/
+> https://unix.stackexchange.com/questions/44027/how-to-fix-boot-failure-due-to-incorrect-fstab
+
+- Missing `/boot/grub/grub.cfg`
+- Incorrect `/etc/fstab` causing mounting problem
+
+#### In GRUB CLI
+
+First, list the partitions:
+
+```
+grub> ls
+```
+
+In the output we see `(hd0,msdos1)`, that's  probably where the OS is installed
+
+Check what's in that partition:
+
+```
+grub> ls (hd0,msdos1)/
+grub> ls (hd0,msdos1)/boot
+grub> ls (hd0,msdos1)/boot/grub
+```
+
+The output of second line shows us the kernel and image files we need later.
+The output of third line shows that  `grub.cfg` is missing, that's why grub didn't find the os.
+
+Boot:
+
+```
+grub> set root=(hd0,1)
+grub> linux /boot/vmlinuz-linux root=/dev/vda1
+grub> initrd /boot/initramfs-linux.img
+grub> boot
+```
+
+`root=/dev/vda1` is the location of the root filesystem. ~~(Meditating might help finding where it is)~~
+
+Our first boot try failed, and looking at the error message that popped up, it's because the OS failed to mount something to `/mnt`.
+
+Add an option then boot:
+
+```
+grub> set root=(hd0,1)
+grub> linux /boot/vmlinuz-linux root=/dev/vda1 init=/bin/bash
+grub> initrd /boot/initramfs-linux.img
+grub> boot
+```
+
+The `fstab` has some problematic lines causing mounting failure. In order to bypass that,  `init=/bin/bash` is added.
+
+We are now in linux!
+
+#### In Linux
+
+Remount root folder to gain write access:
+
+```shell
+mount -o remount,rw /
+```
+
+Reconfigure grub:
+
+```shell
+grub-install --target=i386-pc /dev/vda
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+Fix `/etc/fstab` by deleteing or commenting this line:
+
+```
+/some-filesystem.img /mnt ext4 rw,noatime
+```
+
+Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
+
+---
+
+### 2.2 Is It Wrong to Try to Recycle Midterm Problems?
+
+
+
+
+
+
+
+
+
+
+
