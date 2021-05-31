@@ -384,6 +384,99 @@ Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
 
 ### 2.2 Is It Wrong to Try to Recycle Midterm Problems?
 
+> Refs:
+>
+> `mdadm` man page
+> https://www.reddit.com/r/linuxquestions/comments/debx7w/mdadm_raid0_default_layout/
+> https://wiki.archlinux.org/title/Mkinitcpio#Image_creation_and_activation
+> https://wiki.archlinux.org/title/Install_Arch_Linux_on_LVM#Adding_mkinitcpio_hooks
+> https://wiki.archlinux.org/title/RAID#Update_configuration_file
+> https://wiki.archlinux.org/title/RAID#Installing_Arch_Linux_on_RAID
+
+#### Fix RAID array and `chroot`
+
+The system seems to be messed up completely, so we have to boot with an iso first.
+After it's booted, check the disk status first:
+
+```shell
+lsblk
+```
+
+`md0` is missing in the list, so check its raid status:
+
+```shell
+mdadm --detail /dev/md0
+```
+
+According to the output, both disks are working, but the array some how failed to start. Also, the two devices in the array are `/dev/dm-0` and `/dev/vda5`.
+
+Manually assemble the array and mount them:
+
+```shell
+echo 2 > /sys/module/raid0/parameters/default_layout
+mdadm --stop /dev/md0
+mdadm --assemble /dev/md0 /dev/vda5 /dev/dm-0
+mount /dev/md0 /mnt
+mount /dev/nasa/home /mnt/root
+```
+
+Update `mdadm.conf` and `chroot`
+
+```shell
+mdadm --detail --scan >> /mnt/etc/mdadm.conf
+arch-chroot /mnt
+```
+
+#### Regenerate image, edit boot loader settings
+
+Install some packages for later use:
+
+```shell
+pacman -Sy vim lvm2
+```
+
+Edit `/etc/mkinitcpio.conf` like this:
+
+```
+...
+MODULES=(dm-raid raid0 raid1)
+...
+HOOKS=(base udev autodetect modconf block lvm2 mdadm_udev filesystems keyboard fsck)
+...
+```
+
+In the `HOOKS` section, only `lvm2` and `mdadm_udev` are new.
+
+Regereate image:
+
+```shell
+mkinitcpio -P
+```
+
+Edit `/etc/default/grub`:
+
+```
+...
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet raid0.default_layout=2 root=/dev/md0"
+...
+```
+
+Regenerate grub config file
+
+```shell
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+Exit and reboot
+
+```shell
+exit
+umount -R /mnt
+reboot
+```
+
+shell
+
 
 
 
