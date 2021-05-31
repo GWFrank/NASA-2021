@@ -1,5 +1,5 @@
 ---
-typora-root-url: pics/
+typora-root-url: pics
 ---
 
 # NASA HW6
@@ -228,11 +228,61 @@ After the OS is installed, the NAT interface can be removed so that test result 
 
 ## 2. Short Answer
 
+### 1.
 
+> Refs:
+>
+> None
 
+The TTL of a DNS record is the time a cache of that record will live.
+A longer TTL usually means a longer DNS propagation time.
+A long TTL can reduce the load of name servers. A short TTL can keep more clients with the latest DNS record.
 
+---
 
+### 2.
 
+> Refs:
+>
+> https://en.wikipedia.org/wiki/Domain_Name_System
+
+Without cache, every time a DNS server receives a query from client, it will recursively ask the right name server until it gets the answer from the authoritative server.
+If the DNS server is using cache, when a client queries a domain that is in the cache, it will return the cached record.
+
+Using cache reduces the workload of authoritative servers, since DNS resolvers query less times.
+
+---
+
+### 3.
+
+> Refs:
+>
+> http://unixwiz.net/techtips/iguide-kaminsky-dns-vuln.html
+
+A DNS cache poisoning attack injects fake DNS records to the victim DNS server's cache. A fake record might point commonly-used domains to the attacker's machine, allowing other attacks such as man-in-the-middle attack to happen.
+
+A DNS cache poisoning attack can be carried out this way:
+
+1. The attacker sends a DNS query for a hostname he wants to hijack (say `example.net`) to the victim name server.
+2. The victim server doesn't have a cache for that domain, so it starts a recursive query for `example.net`.
+3. Meanwhile, the attacker floods the victim with DNS responses of `example.net`.
+4. If one of the responses matches the query ID, goes to the right port, and arrives before the genuine server, the attack is done.
+
+A mitigation is to use random query IDs instead of incremental IDs (used in the old days).
+
+---
+
+### 4.
+
+> Refs:
+>
+> http://unixwiz.net/techtips/iguide-kaminsky-dns-vuln.html
+
+The original cache poisoning attack requires the hosname the attacker wants to hijack not to be in the cache. However in Kaminsky attack, the attacker sends a query for a new, randomized hostname within the target domain. Therefore the attacker can keep guessing query ID without obsticles.
+
+One defense is to randomize the source port, making the attack harder but still possible.
+
+Another defense is to use certificates to verify that responses are coming from genuine servers.
 
 ---
 
@@ -289,12 +339,6 @@ mount.nfs 10.217.44.112:/e/NASA_flag /mnt
 cd /mnt
 cat flag
 ```
-
-#### Failed attempts
-
-- Directly mount on workstation
-- Docker
-- Use VPN
 
 ---
 
@@ -393,7 +437,9 @@ Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
 > https://wiki.archlinux.org/title/RAID#Update_configuration_file
 > https://wiki.archlinux.org/title/RAID#Installing_Arch_Linux_on_RAID
 
-#### Fix RAID array and `chroot`
+#### 2.2.1 Vanilla
+
+##### Fix RAID array to `chroot`
 
 The system seems to be messed up completely, so we have to boot with an iso first.
 After it's booted, check the disk status first:
@@ -427,7 +473,7 @@ mdadm --detail --scan >> /mnt/etc/mdadm.conf
 arch-chroot /mnt
 ```
 
-#### Regenerate image, edit boot loader settings
+##### Regenerate image, edit boot loader settings
 
 Install some packages for later use:
 
@@ -475,17 +521,19 @@ umount -R /mnt
 reboot
 ```
 
-shell
+#### 2.2.2 Raid, Shadow Legends
 
+Check the status of `/dev/md1`:
 
+```shell
+mdadm --detail /dev/md1
+```
 
+The array is missing a drive, so we add the unused drive to it:
 
+```shell
+mdadm --add /dev/md1 /dev/vda7
+```
 
-
-
-
-
-
-
-
+---
 
