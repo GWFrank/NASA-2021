@@ -342,7 +342,14 @@ cat flag
 
 ### 1.2
 
+> Refs:
+>
+> `man exports`
+> http://linux.vbird.org/linux_enterprise/kerberos.php
 
+ In `/etc/exports`, there is an option `sec=` that can use kerberos to authenticate hosts and encrypt nfs traffic (nfs data is transferred in plain text). A few options such as `ro`, `rw`, `root_squash` can be set differently based on `sec` level.
+
+The `/etc/exports` at the server probably makes all hosts without kerberos permission unable to access all directories under `/e/` except `/e/NASA_flag/`, therefore we can't mount `/e/undergrads` to gain access to other people's home directory.
 
 ---
 
@@ -420,7 +427,7 @@ First, list the partitions:
 grub> ls
 ```
 
-In the output we see `(hd0,msdos1)`, that's  probably where the OS is installed
+In the output we see `(hd0,msdos1)`, that's probably where the OS is installed
 
 Check what's in that partition:
 
