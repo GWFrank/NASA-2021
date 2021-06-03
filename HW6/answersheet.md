@@ -17,20 +17,20 @@ b09902004 郭懷元
 > https://ubuntu.com/server/docs/network-dhcp
 > https://ithelp.ithome.com.tw/articles/10030241
 
-### Server VM setup
+**Server VM setup**
 
-**Hypervisor:** VMWare
+Hypervisor: VMWare
 In the hardware setting, give the VM a NAT adapter and a LAN segment adapter.
 
-![na-p1-6](/na-p1-6.png)
+![na-p1-6](na-p1-6.png)
 
 The NAT adapter is the interface to outer network, and the LAN segment adapter is for internal network.
 
 ---
 
-### OS installation & static IP configuration
+**OS installation & static IP configuration**
 
-**OS:** Ubuntu Server 20.04
+OS: Ubuntu Server 20.04
 
 During the installation steps, just follow the default options.
 After the installation and reboot, check which interface is the internal one:
@@ -68,11 +68,11 @@ Check interfaces:
 ip a
 ```
 
-![na-p1-7](/na-p1-7.png)
+![na-p1-7](na-p1-7.png)
 
 ---
 
-### DHCP configuration
+**DHCP configuration**
 
 Install `dhcpd`
 
@@ -116,7 +116,7 @@ sudo systemctl restart isc-dhcp-server.service
 
 ---
 
-### DNS configuration
+**DNS configuration**
 
 Install `bind9`, then `cd` to the folder with configs.
 
@@ -200,29 +200,28 @@ sudo service bind9 reload
 
 ---
 
-### Client VM setup
+**Client VM setup**
 
 Basically the same as the server. Still add two network interfaces because we need the NAT interface for the installation process.
-
 After the OS is installed, the NAT interface can be removed so that test result isn't influenced.
 
 ---
 
-### DHCP result
+**DHCP result**
 
-![na-p1-1](/na-p1-1.png)
+<img src="na-p1-1.png" alt="na-p1-1" style="zoom:80%;" />
 
-![na-p1-2](/na-p1-2.png)
+<img src="na-p1-2.png" alt="na-p1-2" style="zoom: 67%;" />
 
 ---
 
-### DNS result
+**DNS result**
 
-![na-p1-3](/na-p1-3.png)
+<img src="na-p1-3.png" alt="na-p1-3" style="zoom:80%;" />
 
-![na-p1-4](/na-p1-4.png)
+<img src="na-p1-4.png" alt="na-p1-4" style="zoom:80%;" />
 
-![na-p1-5](/na-p1-5.png)
+<img src="na-p1-5.png" alt="na-p1-5" style="zoom:80%;" />
 
 ---
 
@@ -281,7 +280,6 @@ A mitigation is to use random query IDs instead of incremental IDs (used in the 
 The original cache poisoning attack requires the hosname the attacker wants to hijack not to be in the cache. However in Kaminsky attack, the attacker sends a query for a new, randomized hostname within the target domain. Therefore the attacker can keep guessing query ID without obsticles.
 
 One defense is to randomize the source port, making the attack harder but still possible.
-
 Another defense is to use certificates to verify that responses are coming from genuine servers.
 
 ---
@@ -290,7 +288,7 @@ Another defense is to use certificates to verify that responses are coming from 
 
 ## 1. This Problem Is Not For Sale
 
-### 1.1 Using a Saddle? Shame on You!
+### 1.1
 
 > Refs:
 >
@@ -342,9 +340,69 @@ cat flag
 
 ---
 
+### 1.2
+
+
+
+---
+
+### 1.3
+
+> Refs:
+>
+> https://www.osc.edu/book/export/html/4523
+> https://www.alibabacloud.com/help/zh/doc-detail/143009.htm
+
+File path: `/home/student/09/b09902004/.nasa-is-an-awesome-course`
+
+Create `.nasa-is-an-awesome-course`:
+
+```shell
+touch .nasa-is-an-awesome-course
+```
+
+Make the file only accessible to myself first:
+
+```shell
+chmod 600 .nasa-is-an-awesome-course
+```
+
+Get the uid of `wp` and use `NFSv4 ACL` to control more advanced file permission:
+
+```shell
+id wp
+nfs4_setfacl -a A::69465:RW .nasa-is-an-awesome-course
+```
+
+---
+
+### 1.4
+
+> Refs:
+>
+> https://en.wikipedia.org/wiki/Network_File_System
+> https://zh.wikipedia.org/wiki/ISCSI
+
+**Comparison**
+
+| NFS                                  | iSCSI                                                |
+| ------------------------------------ | ---------------------------------------------------- |
+| Allow access to storage over network | Same                                                 |
+| Server serves files to client        | Server serves blocks to client                       |
+| NFSv4 is stateful                    | Requires a higher level lock manager for concurrency |
+| No choice for filesystem             | Any filesystem you like with favored features        |
+
+**Use Case**
+
+NFS: File sharing between different machines, such as user home directories on workstation.
+
+iSCSI: A single server accessing a room of storage devices.
+
+---
+
 ## 2. Getting Your Fix of VMs
 
-### 2.1 Does It Boot?
+### 2.1
 
 > Refs:
 >
@@ -354,7 +412,7 @@ cat flag
 - Missing `/boot/grub/grub.cfg`
 - Incorrect `/etc/fstab` causing mounting problem
 
-#### In GRUB CLI
+**In GRUB CLI**
 
 First, list the partitions:
 
@@ -398,10 +456,9 @@ grub> boot
 ```
 
 The `fstab` has some problematic lines causing mounting failure. In order to bypass that,  `init=/bin/bash` is added.
-
 We are now in linux!
 
-#### In Linux
+**In Linux**
 
 Remount root folder to gain write access:
 
@@ -416,7 +473,7 @@ grub-install --target=i386-pc /dev/vda
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-Fix `/etc/fstab` by deleteing or commenting this line:
+Fix `/etc/fstab` by deleting or commenting this line:
 
 ```
 /some-filesystem.img /mnt ext4 rw,noatime
@@ -426,7 +483,7 @@ Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
 
 ---
 
-### 2.2 Is It Wrong to Try to Recycle Midterm Problems?
+### 2.2
 
 > Refs:
 >
@@ -437,9 +494,9 @@ Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
 > https://wiki.archlinux.org/title/RAID#Update_configuration_file
 > https://wiki.archlinux.org/title/RAID#Installing_Arch_Linux_on_RAID
 
-#### 2.2.1 Vanilla
+#### 2.2.1
 
-##### Fix RAID array to `chroot`
+**Fix RAID array to `chroot`**
 
 The system seems to be messed up completely, so we have to boot with an iso first.
 After it's booted, check the disk status first:
@@ -473,7 +530,9 @@ mdadm --detail --scan >> /mnt/etc/mdadm.conf
 arch-chroot /mnt
 ```
 
-##### Regenerate image, edit boot loader settings
+---
+
+**Regenerate image, edit boot loader settings**
 
 Install some packages for later use:
 
@@ -521,7 +580,9 @@ umount -R /mnt
 reboot
 ```
 
-#### 2.2.2 Raid, Shadow Legends
+---
+
+#### 2.2.2
 
 Check the status of `/dev/md1`:
 
@@ -536,4 +597,17 @@ mdadm --add /dev/md1 /dev/vda7
 ```
 
 ---
+
+### 2.3
+
+> Refs:
+>
+> https://gist.github.com/vodik/5660494
+> https://wiki.archlinux.org/title/pacman#Installing_packages
+
+When you run `pacman -Sy <package>`, `pacman` only looks at `<package>` and its dependencies, then update them. Old libraries are not kept. The problem is that other apps/libraries on the system may have common dependencies, but they are not updated when using `pacman -Sy <package>`. If the updated dependencies become too new for other apps/libraries to use (e.g. new api), things go really bad.
+
+To avoid this, use `pacman -Syu <package>` instead. `-u` will do a full upgrade. ~~Or use other distros.~~
+
+
 
