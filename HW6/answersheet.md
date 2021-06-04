@@ -22,7 +22,7 @@ b09902004 郭懷元
 Hypervisor: VMWare
 In the hardware setting, give the VM a NAT adapter and a LAN segment adapter.
 
-![na-p1-6](na-p1-6.png)
+<img src="na-p1-6.png" alt="na-p1-6" style="zoom: 67%;" />
 
 The NAT adapter is the interface to outer network, and the LAN segment adapter is for internal network.
 
@@ -209,19 +209,19 @@ After the OS is installed, the NAT interface can be removed so that test result 
 
 **DHCP result**
 
-<img src="na-p1-1.png" alt="na-p1-1" style="zoom:80%;" />
+<img src="na-p1-1.png" alt="na-p1-1"  />
 
-<img src="na-p1-2.png" alt="na-p1-2" style="zoom: 67%;" />
+<img src="na-p1-2.png" alt="na-p1-2"  />
 
 ---
 
 **DNS result**
 
-<img src="na-p1-3.png" alt="na-p1-3" style="zoom:80%;" />
+<img src="na-p1-3.png" alt="na-p1-3"  />
 
-<img src="na-p1-4.png" alt="na-p1-4" style="zoom:80%;" />
+<img src="na-p1-4.png" alt="na-p1-4"  />
 
-<img src="na-p1-5.png" alt="na-p1-5" style="zoom:80%;" />
+<img src="na-p1-5.png" alt="na-p1-5"  />
 
 ---
 
@@ -415,6 +415,7 @@ iSCSI: A single server accessing a room of storage devices.
 >
 > https://www.linux.com/training-tutorials/how-rescue-non-booting-grub-2-linux/
 > https://unix.stackexchange.com/questions/44027/how-to-fix-boot-failure-due-to-incorrect-fstab
+> https://wiki.archlinux.org/title/Device_file#virtio-blk
 
 - Missing `/boot/grub/grub.cfg`
 - Incorrect `/etc/fstab` causing mounting problem
@@ -449,7 +450,7 @@ grub> initrd /boot/initramfs-linux.img
 grub> boot
 ```
 
-`root=/dev/vda1` is the location of the root filesystem. ~~(Meditating might help finding where it is)~~
+`root=/dev/vda1` is the location of the root filesystem. Since it's a `.qcow2` disk, it's probably `/dev/vd*`. And because it's the only device, the name should be `/dev/vda`. (Or you can use UUID to mount)
 
 Our first boot try failed, and looking at the error message that popped up, it's because the OS failed to mount something to `/mnt`.
 
