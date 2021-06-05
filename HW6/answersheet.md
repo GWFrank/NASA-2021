@@ -1,5 +1,5 @@
 ---
-typora-root-url: pics
+typora-root-url: pics/
 ---
 
 # NASA HW6
@@ -416,6 +416,7 @@ iSCSI: A single server accessing a room of storage devices.
 > https://www.linux.com/training-tutorials/how-rescue-non-booting-grub-2-linux/
 > https://unix.stackexchange.com/questions/44027/how-to-fix-boot-failure-due-to-incorrect-fstab
 > https://wiki.archlinux.org/title/Device_file#virtio-blk
+> https://wiki.archlinux.org/title/Fstab
 
 - Missing `/boot/grub/grub.cfg`
 - Incorrect `/etc/fstab` causing mounting problem
@@ -481,10 +482,10 @@ grub-install --target=i386-pc /dev/vda
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-Fix `/etc/fstab` by deleting or commenting this line:
+Fix `/etc/fstab` by adding the missing parameters in this line:
 
 ```
-/some-filesystem.img /mnt ext4 rw,noatime
+/some-filesystem.img	/mnt	ext4	rw,noatime	0	2
 ```
 
 Finally, reboot the system by pressing `CTRL` + `ALT` + `DEL`.
@@ -545,7 +546,7 @@ arch-chroot /mnt
 Install some packages for later use:
 
 ```shell
-pacman -Sy vim lvm2
+pacman -Syu lvm2
 ```
 
 Edit `/etc/mkinitcpio.conf` like this:
