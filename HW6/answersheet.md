@@ -561,7 +561,7 @@ HOOKS=(base udev autodetect modconf block lvm2 mdadm_udev filesystems keyboard f
 
 In the `HOOKS` section, only `lvm2` and `mdadm_udev` are new.
 
-Regereate image:
+Regenerate image:
 
 ```shell
 mkinitcpio -P
