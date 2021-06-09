@@ -1,5 +1,5 @@
 ---
-typora-root-url: ./
+typora-root-url: .
 ---
 
 # WiFi Lab
