@@ -1,8 +1,0 @@
-Reference:
-     https://support.google.com/youtube/answer/1722171?hl=zh-Hant#zippy=%2C%E4%BD%8D%E5%85%83%E7%8E%87
-     https://zh.wikipedia.org/wiki/RAID
-    
-In "course information spring 2021.pdf" page 10, there are about 1200 courses. Assume each course has on average 3 hours of class video per week. We have 1200*3*3600*20 = 2.6*10^8 seconds of video.
-As for the bitrate of these video, we know that most of the courses is recorded using laptop's webcam, and most of laptops have a 720p webcam with 30 fps. Using youtube's recommended bitrate, at 720p and 30 fps, it's 5 Mbps.
-So we have about (2.6*10^8 )*5 = 1.3*10^9 Mb = 1.625*10^8 MB = 1.59*10^5 GB = 155 TB of video. Then we need some headroom in case the video is larger than we estimated. I choose a 30% headroom, so the spaces needed becomes 155*10/7 = 221 TB.
-To prevent data loss due to hard drive failures, we need a RAID. I choose RAID 6 because it's a nice balance between I/O performance and data security. Assuming we use 16 TB drives, we will need (221/16)+2+1 = 17 drives. That is 17*16 = 272 TB at total.
