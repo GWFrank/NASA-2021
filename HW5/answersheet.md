@@ -1,5 +1,5 @@
 ---
-typora-root-url: pics/
+typora-root-url: pics
 ---
 
 # NASA HW5
@@ -116,7 +116,7 @@ Be reading `server.py`, we know that the flag will be shown if `qsort()` runs sl
 
 Code based on `example.py` to obtain the flag is in `p2-3.py`.
 
-![sec-p2-3](/sec-p2-3.png)
+![sec-p2-3](sec-p2-3.png)
 
 ---
 
@@ -151,7 +151,7 @@ So on and so on...
 
 Time complexity becomes exponential and DoS attacks become possible.
 
-![sec-p2-4](/sec-p2-4.png)
+![sec-p2-4](sec-p2-4.png)
 
 ---
 
@@ -169,7 +169,7 @@ Because `proof_of_work()` the random number fed to hash only ranges from `0` to 
 
 Code to generate lookup table is in `gen_rainbow.py`. Code based on `example.py` to obtain the flag is in `p2-5.py`. Run `python gen_rainbow.py` first to generate the data needed.
 
-![sec-p2-5](/sec-p2-5.png)
+![sec-p2-5](sec-p2-5.png)
 
 ---
 
@@ -299,9 +299,9 @@ wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/
 
 The password is `1qaz2wsx3edc4rfv`. The flag in the desktop image of the vm.
 
-![sec-p4-1](/sec-p4-1.png)
+![sec-p4-1](sec-p4-1.png)
 
-![sec-p4-1-2](/sec-p4-1-2.png)
+![sec-p4-1-2](sec-p4-1-2.png)
 
 ---
 
@@ -355,9 +355,9 @@ Since we are brute forcing, GPU would help a lot. I start with 8-character passw
 
 The password is `apple8787`. The flag is the filenames of files on desktop.
 
-![sec-p4-2-1](/sec-p4-2-1.png)
+![sec-p4-2-1](sec-p4-2-1.png)
 
-![sec-p4-2-2](/sec-p4-2-2.png)
+![sec-p4-2-2](sec-p4-2-2.png)
 
 ---
 
@@ -395,7 +395,7 @@ ifconfig # wlo1 will be replaced with a new interface, mine is wlo1mon
 sudo airodump-ng
 ```
 
-![sec-p5-1](/sec-p5-1.png)
+![sec-p5-1](sec-p5-1.png)
 
 An entry with ESSID `Palace of Joe Tsai` is the AP. It has MAC address `94:BF:C4:32:CC:88` on channel `4`.
 
@@ -421,7 +421,7 @@ Upload the `.cap` file to https://hashcat.net/cap2hccapx/ or download the execua
 ./hashcat-6.1.0/hashcat.bin -m 2500 -a 3 hash_wifi.hccapx 09?d?d?d?d?d?d?d?d
 ```
 
-![sec-p5-1-2](/sec-p5-1-2.png)
+![sec-p5-1-2](sec-p5-1-2.png)
 
 ---
 
@@ -433,12 +433,12 @@ Open `hack_wifi.cap` with WireShark. Go to `Edit` -> `Preferences` -> `Protocols
 
 Add a decryption key like this:
 
-![sec-p5-2-3](/sec-p5-2-3.png)
+![sec-p5-2-3](sec-p5-2-3.png)
 
 Go to `Statistics` -> `Conversations` -> `TCP`. Select arbitary entry and `follow stream` because they all have the same two hosts.
 
-![sec-p5-2-1](/sec-p5-2-1.png)
-![sec-p5-2-2](/sec-p5-2-2.png)
+![sec-p5-2-1](sec-p5-2-1.png)
+![sec-p5-2-2](sec-p5-2-2.png)
 
 ---
 
@@ -452,7 +452,7 @@ To obtain victim's MAC address, run:
 sudo airodump-ng wlo1mon --bssid 94:BF:C4:32:CC:88 -c 4 # the same command from p5-1
 ```
 
-![sec-p5-3-1](/sec-p5-3-1.png)
+![sec-p5-3-1](sec-p5-3-1.png)
 
 The victim's MAC address is shown in `STATION`, which is `8C:88:2B:00:73:6E`. To send attack, run:
 
@@ -467,7 +467,7 @@ sudo aireplay-ng --deauth 0 -c 8C:88:2B:00:73:6E -a 94:BF:C4:32:CC:88 wlo1mon
 
 Then check the web page with another device.
 
-![sec-p5-3-2](/sec-p5-3-2.png)
+![sec-p5-3-2](sec-p5-3-2.png)
 
 ---
 
@@ -498,7 +498,7 @@ ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f base.ldif
 ```
 
-![ldap-p1-1](/ldap-p1-1.png)
+![ldap-p1-1](ldap-p1-1.png)
 
 ---
 
@@ -619,7 +619,7 @@ ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f stu00.ldif
 ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f ta00.ldif
 ```
 
-![ldap-p2-2](/ldap-p2-2.png)
+![ldap-p2-2](ldap-p2-2.png)
 
 ---
 
@@ -637,7 +637,7 @@ Add this line:
 %ta ALL=(ALL) NOPASSWD: ALL
 ```
 
-![ldap-p2-3](/ldap-p2-3.png)
+![ldap-p2-3](ldap-p2-3.png)
 
 ---
 
@@ -705,7 +705,7 @@ ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f p00.ldif
 ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f p01.ldif
 ```
 
-![ldap-p3](/ldap-p3.png)
+![ldap-p3](ldap-p3.png)
 
 ---
 
@@ -868,7 +868,7 @@ Change these values if needed.
 
 #### Demo
 
-<img src="/ldap-p6-1.png" alt="ldap-p6-1" style="zoom: 67%;" />
+<img src="ldap-p6-1.png" alt="ldap-p6-1" style="zoom: 67%;" />
 
 ---
 
@@ -904,7 +904,7 @@ This method is a bit dirty and doesn't prevent user from using ssh-key, but can 
 
 #### Demo
 
-![ldap-p6-2](/ldap-p6-2.png)
+![ldap-p6-2](ldap-p6-2.png)
 
 ---
 

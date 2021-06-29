@@ -1,5 +1,5 @@
 ---
-typora-root-url: pics/
+typora-root-url: pics
 ---
 
 # NASA HW6
@@ -144,7 +144,7 @@ The first two lines are just defaults.
 `forwarders` are the DNS servers we will forward non-local.
 `allow-recursion` sets who's DNS queries are allowed to do recursive query.
 
-Edit `named.conf.options`:
+Edit `named.conf.local`:
 
 ```
 zone "b09902004.com" {
