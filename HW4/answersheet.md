@@ -1,7 +1,3 @@
----
-typora-root-url: pics
----
-
 # NASA HW4
 
 b09902004 郭懷元
@@ -334,7 +330,7 @@ docker run --name nginx-server -d -p 8888:80 nginx:1.19.2
 
 `nginx:1.19.2` is the image we are using.
 
-![sa-p1](sa-p1.png)
+![sa-p1](pics/sa-p1.png)
 
 ---
 
@@ -408,7 +404,7 @@ docker run --name nginx-1 -d -p 5678:80 nginx:1.19.2
 
 `-p 5678:80` means we forward local port `5678` to container's port `80`.
 
-![sa-p2-6](/sa-p2-6.png)
+![sa-p2-6](pics/sa-p2-6.png)
 
 ---
 
@@ -420,7 +416,7 @@ docker exec -it nginx-1 bash
 
 Executes `bash` shell in `nginx-1`.
 
-![sa-p2-7](/sa-p2-7.png)
+![sa-p2-7](pics/sa-p2-7.png)
 
 ---
 
@@ -432,7 +428,7 @@ docker exec -it nginx-1 cat /etc/nginx/nginx.conf
 
 Usage is `docker exec -it <container name> <command>`. So just put `cat /etc/nginx/nginx.conf` in the `<command>` part.
 
-![sa-p2-8](/sa-p2-8.png)
+![sa-p2-8](pics/sa-p2-8.png)
 
 ---
 
@@ -480,11 +476,11 @@ docker network connect nasa-net nginx-2
 
 `docker network connect` connects a container to a bridge.
 
-![sa-p3-2-3](/sa-p3-2-3.png)
+![sa-p3-2-3](pics/sa-p3-2-3.png)
 
-![sa-p3-2-1](/sa-p3-2-1.png)
+![sa-p3-2-1](pics/sa-p3-2-1.png)
 
-![sa-p3-2-2](/sa-p3-2-2.png)
+![sa-p3-2-2](pics/sa-p3-2-2.png)
 
 ---
 
@@ -496,7 +492,7 @@ ip a show dev docker0
 
 Because I am running Docker directly on linux, a network adapter `docker0` will be added. We can use `ip a show dev <device name>` to see it's info.
 
-![sa-p3-3](/sa-p3-3.png)
+![sa-p3-3](pics/sa-p3-3.png)
 
 ---
 
@@ -593,7 +589,7 @@ networks:
       name: nasa-net
 ```
 
-![sa-p4-3](/sa-p4-3.png)
+![sa-p4-3](pics/sa-p4-3.png)
 
 ---
 
@@ -666,7 +662,7 @@ docker run --name dind -v /var/run/docker.sock:/var/run/docker.sock  nested_dock
 
 Due to some [low-level issues and how docker is implemented](https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/), running an completely isolated docker inside a docker container might requires some nasty hacks. However, in most cases we don't necessary need an completely isolated docker engine. If we expose docker socket of the outer docker to the inner (`-v /var/run/docker.sock:/var/run/docker.sock`), we would still be able to use docker inside a container.
 
-![sa-p5-3](/sa-p5-3.png)
+![sa-p5-3](pics/sa-p5-3.png)
 
 ---
 
@@ -684,7 +680,7 @@ docker push generalwinter/dind-nasa-hw4:v1.0.0
 
 `docker push <account name>/<upload image name>:<tag>`
 
-![sa-p5-4](/sa-p5-4.png)
+![sa-p5-4](pics/sa-p5-4.png)
 
 ---
 
@@ -698,7 +694,7 @@ docker push generalwinter/dind-nasa-hw4:v1.0.0
 > https://columns.chicken-house.net/2017/12/31/microservice9-servicediscovery/
 > https://web.archive.org/web/20200612023642if_/https://success.docker.com/article/networking#swarmnativeservicediscovery
 
-![sa-p6-1](/sa-p6-1.jpeg)
+![sa-p6-1](pics/sa-p6-1.jpeg)
 
 A Docker Swarm is constructed with nodes, and there are two types of nodes, `Manager` and `Worker`. A `Manager` node deploys tasks to `Worker` nodes. When there are multiple `Manager` nodes, one of them would be the "leader" and other nodes will follow the leader. A `Worker` node receives tasks, do them, and tell `Manager` its status.
 
@@ -745,7 +741,7 @@ On worker vms
 docker swarm join --token SWMTKN-1-0j4x20nk85imkbx005ry77uy1e3pksmjz9gl9wrgr8crmed76z-9yw549tc77iw8dv7f1kb7uk9y 192.168.50.146:2377
 ```
 
-![sa-p6-2-b](/sa-p6-2-b.png)
+![sa-p6-2-b](pics/sa-p6-2-b.png)
 
 #### (c)
 
@@ -755,7 +751,7 @@ Add labels with:
 docker node update --label-add <label name> <node name>
 ```
 
-![sa-p6-2-c](/sa-p6-2-c.png)
+![sa-p6-2-c](pics/sa-p6-2-c.png)
 
 #### (d)
 
@@ -798,4 +794,4 @@ docker-compose down
 docker stack deploy --compose-file docker-compose.yml nasa-hw4-p6
 ```
 
-![sa-p6-2-d](/sa-p6-2-d.png)
+![sa-p6-2-d](pics/sa-p6-2-d.png)

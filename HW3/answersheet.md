@@ -1,7 +1,3 @@
----
-typora-root-url: pics
----
-
 # NASA HW3
 
 b09902004 郭懷元
@@ -13,9 +9,9 @@ b09902004 郭懷元
 #### 1.
 
 > References:
->
+> 
 > https://www.netadmin.com.tw/netadmin/zh-tw/technology/FFD0629A85794E9BAC2A9173D5B96EDC
->
+> 
 > https://learningnetwork.cisco.com/s/question/0D53i00000Kt6oFCAR/what-happens-when-an-8021q-trunk-port-receives-a-tagged-frame-with-vlan-id-the-same-as-the-native-vlan
 
 Assuming the frame comes from `vlan 307`.
@@ -29,11 +25,11 @@ Before `Gi1/0/5` it would have a tag of `vlan 307`. After `Gi1/0/5` the tag is s
 #### 2.
 
 > References:
->
+> 
 > https://www.netadmin.com.tw/netadmin/zh-tw/technology/FFD0629A85794E9BAC2A9173D5B96EDC
->
+> 
 > https://learningnetwork.cisco.com/s/question/0D53i00000Kt6oFCAR/what-happens-when-an-8021q-trunk-port-receives-a-tagged-frame-with-vlan-id-the-same-as-the-native-vlan
->
+> 
 > https://community.cisco.com/t5/switching/what-happens-when-switch-trunk-port-connected-to-pc/td-p/3731202
 
 Because `Gi1/0/1` is a trunk port and the destination is in `vlan 424`, since `vlan 424` is not the native vlan of `Gi1/0/1`, the header remains the same after going through `Gi1/0/1`.
@@ -43,13 +39,12 @@ When the packets goes through `Gi1/0/2`, because it's an access port, the header
 #### 3.
 
 > References:
->
+> 
 > https://www.jannet.hk/zh-Hant/post/virtual-lan-vlan-attack/
->
+> 
 > https://en.wikipedia.org/wiki/VLAN_hopping
 
 `switchport trunk native` can be used against "double tagging", which is a attack technique that can allow an attacker to gain access to a vlan he doesn't belong to. Double tagging exploits the fact that trunk ports will strip down vlan tags that belong to its native vlan, thus the inner tag made by the attacker can be shown to the switch on the other side. By changing the native vlan to an unused one, all frames will preserve its tag, and the inner tag will not be shown.
-
 
 ---
 
@@ -58,7 +53,7 @@ When the packets goes through `Gi1/0/2`, because it's an access port, the header
 #### 1.
 
 > References:
->
+> 
 > https://en.wikipedia.org/wiki/Link_aggregation#Same_link_speed
 
 No. According to the IEEE standard, link aggregation requires all ports to have the same speed. In this case the maxmium bandwidth would be 2*100Mbps.
@@ -66,7 +61,7 @@ No. According to the IEEE standard, link aggregation requires all ports to have 
 #### 2.
 
 > References:
->
+> 
 > Lab 4 slides
 
 `channel-group mode` is preferred to be set to `active` rather than `passive`, because link aggregation would work only if at least one side is set to `active`.
@@ -87,9 +82,9 @@ CiscoLab(config-if-range)# channel-group 1 mode active
 #### 1.
 
 > References:
->
+> 
 > https://documentation.meraki.com/MS/Layer_3_Switching/Layer_3_vs_Layer_2_Switching
->
+> 
 > http://www.fiber-optic-equipment.com/layer-3-switch-vs-router-choose.html
 
 A L2 switch uses MAC address to forward frames to other machines, and it can only work within a LAN. A L3 switch is like a L2 switch that can do routing.
@@ -99,7 +94,7 @@ Both a router and a L3 switch can route packets. But L3 switches are designed wi
 #### 2.
 
 > References:
->
+> 
 > None
 
 An ARP table shows a IP address's corresponding MAC address. A MAC address table shows the MAC address of the device connected to a port.
@@ -107,7 +102,7 @@ An ARP table shows a IP address's corresponding MAC address. A MAC address table
 #### 3.
 
 > References:
->
+> 
 > https://www.sikich.com/insight/how-to-find-which-switch-port-a-device-is-plugged-into-via-ip-address/
 
 1. Connect to the core switch.
@@ -126,7 +121,7 @@ An ARP table shows a IP address's corresponding MAC address. A MAC address table
 #### 1.
 
 > References:
->
+> 
 > https://en.wikipedia.org/wiki/Serial_communication
 
 Serial communication is a means of sending bits, and is contrast to "parallel communication". For example, if the data we are sending is `1011`, in serial communication we would send `1`, `0`, `1`, `1` one at a time. While in parallel communication, we would have 4 channels and each bit it sent in an individual channel.
@@ -140,7 +135,7 @@ The downside is that you can't remotely control and configure the device.
 #### 3.
 
 > References:
->
+> 
 > https://www.jannet.hk/zh-Hant/post/console-cable/
 
 Assuming the switch hasn't been configured and current settings are unknown. One way is to use normal ethernet cable to DIY a Rollover cable, then use a RJ45 to DB9 (female) adapter.
@@ -148,9 +143,9 @@ Assuming the switch hasn't been configured and current settings are unknown. One
 #### 4.
 
 > References:
->
+> 
 > https://coolking1206.pixnet.net/blog/post/57616767
->
+> 
 > https://www.cisco.com/c/en/us/support/docs/smb/switches/cisco-350x-series-stackable-managed-switches/smb5252-what-is-stacking.html
 
 Compared to port trunk, stacking can tolerant not only broken cables but also broken switches.
@@ -162,11 +157,11 @@ In this case we have 2 switches to stack, so we need two in total, one cable fro
 ### 5.
 
 > References:
->
+> 
 > Lab 4 slides
->
+> 
 > https://smallbusiness.chron.com/disable-dns-lookup-cisco-58863.html
->
+> 
 > http://www.james-tw.com/cisco/cisco-she-ding-yuan-duan-lian-xian-telnet-ssh
 
 #### 1.
@@ -233,11 +228,7 @@ CiscoLab(config)# exit
 CiscoLab # copy running-config startup-config 
 ```
 
-![na-p5](/na-p5.png)
-
-
-
-
+![na-p5](pics/na-p5.png)
 
 ---
 
@@ -248,9 +239,8 @@ CiscoLab # copy running-config startup-config
 #### 1 ~ 3.
 
 > References:
->
+> 
 > http://linux.vbird.org/linux_basic/0157installcentos7.php
-
 
 #### 4.
 
@@ -273,7 +263,7 @@ ping 192.168.244.128
 #### 5.
 
 > References:
->
+> 
 > https://blog.gtwang.org/linux/centos-7-install-kvm-qemu-virtual-machine-tutorial/
 
 ```shell
@@ -285,7 +275,7 @@ sudo yum install virt-install qemu-kvm libvirt
 #### 6.
 
 > References:
->
+> 
 > https://blog.gtwang.org/linux/centos-7-install-kvm-qemu-virtual-machine-tutorial/
 
 ```shell
@@ -308,7 +298,7 @@ reboot
 #### 1.
 
 > References:
->
+> 
 > https://zer931.pixnet.net/blog/post/36975565
 
 When using NAT configuration on a guest OS, the guest OS isn't visible to other machines that are on the same network as the host. The host acts like the guest's gateway and a virtual network is built between host and guest.
@@ -318,9 +308,9 @@ When using bridge configuration on a guest, the guest is visible to other machin
 #### 2.
 
 > References:
->
+> 
 > https://www.linux-kvm.org/page/Networking#Public_Bridge
->
+> 
 > https://www.techotopia.com/index.php/Creating_a_CentOS_KVM_Networked_Bridge_Interface
 
 ```shell
@@ -361,26 +351,24 @@ reboot
 # make sure everything behave properly
 ```
 
-
-
 ---
 
 ### 3.
 
 > References:
->
+> 
 > 林順訢
->
+> 
 > https://serverfault.com/questions/731417/how-do-you-create-a-qcow2-file-that-is-small-yet-commodious-on-a-linux-server
->
+> 
 > https://docs.fedoraproject.org/en-US/fedora/rawhide/install-guide/appendixes/Kickstart_Syntax_Reference/
->
+> 
 > https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install
->
+> 
 > https://wyde.github.io/2017/10/15/How-to-Install-VM-on-Linux-KVM-Virtualization-Host-using-Kickstart-File/
->
+> 
 > https://forums.centos.org/viewtopic.php?t=46192
->
+> 
 > https://jamielinux.com/docs/libvirt-networking-handbook/bridged-network.html
 
 #### 1.
@@ -466,7 +454,7 @@ virt-install \
 #### 1.
 
 > References:
->
+> 
 > https://www.cyberciti.biz/faq/centos-stop-start-restart-sshd-command/
 
 ```shell
@@ -478,19 +466,19 @@ systemctl enable sshd
 
 #### 2.
 
-![sa-p4-2](/sa-p4-2.png)
+![sa-p4-2](pics/sa-p4-2.png)
 
 #### 3.
 
 > References:
->
+> 
 > https://superuser.com/questions/637669/how-to-exit-a-virsh-console-connection
 
 Press `Ctrl`+`]`
 
 #### 4.
 
-![sa-p4-4](/sa-p4-4.png)
+![sa-p4-4](pics/sa-p4-4.png)
 
 #### 5.
 
@@ -500,14 +488,14 @@ ssh xiaoming@192.168.244.129
 # ssh <username>@<address>
 ```
 
-![sa-p4-5](/sa-p4-5.png)
+![sa-p4-5](pics/sa-p4-5.png)
 
 ### 5.
 
 #### 1.
 
 > References:
->
+> 
 > https://docs.fedoraproject.org/en-US/Fedora/18/html/Virtualization_Administration_Guide/ch15s05.html
 
 ```shell
@@ -517,7 +505,7 @@ sudo virsh suspend ILoveNASA
 #### 2.
 
 > References:
->
+> 
 > https://www.cyberciti.biz/faq/how-to-clone-existing-kvm-virtual-machine-images-on-linux/
 
 ```shell
@@ -529,7 +517,7 @@ sudo virt-clone --original ILoveNASA --name ILoveNASA-2 --auto-clone
 #### 3.
 
 > References:
->
+> 
 > https://docs.fedoraproject.org/en-US/Fedora/18/html/Virtualization_Administration_Guide/ch15s05.html
 
 ```shell
@@ -539,19 +527,19 @@ sudo virsh resume ILoveNASA
 ### 4.
 
 > References:
->
+> 
 > https://www.cyberciti.biz/faq/how-to-clone-existing-kvm-virtual-machine-images-on-linux/
 
 ```shell
 sudo virsh list --all
 ```
 
-![sa-p5-4](/sa-p5-4.png)
+![sa-p5-4](pics/sa-p5-4.png)
 
 #### 5.
 
 > References:
->
+> 
 > https://serverfault.com/questions/403561/change-amount-of-ram-and-cpu-cores-in-kvm
 
 ```shell
@@ -563,7 +551,7 @@ sudo virsh setvcpus ILoveNASA-2 1 --config
 #### 6.
 
 > References:
->
+> 
 > https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-statlists
 
 ```shell
@@ -571,6 +559,3 @@ sudo virsh domiflist ILoveNASA-2
 # usage:
 # virsh domiflist <guest name>
 ```
-
-
-

@@ -1,7 +1,3 @@
----
-typora-root-url: pics
----
-
 # NASA HW5
 
 b09902004 郭懷元
@@ -11,7 +7,7 @@ b09902004 郭懷元
 ## 1. Threat Modeling
 
 > Refs:
->
+> 
 > None
 
 ### 1
@@ -33,9 +29,9 @@ b09902004 郭懷元
 
 - No violence is involved.
 
-| Threat Model                                   | Countermeasure                                               |
-| ---------------------------------------------- | ------------------------------------------------------------ |
-| Customer sneaks out the restaurant             | Ask customers to pay first                                   |
+| Threat Model                                   | Countermeasure                                                                                      |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Customer sneaks out the restaurant             | Ask customers to pay first                                                                          |
 | Customer tries bring people in that didn't pay | Give customer who have paid a wrist band for identification. Only people with it can get tableware. |
 
 ### 3
@@ -68,19 +64,17 @@ b09902004 郭懷元
 
 - No physical violence.
 
-
-| Threat Model                                                 | Countermeasure                                   |
-| ------------------------------------------------------------ | ------------------------------------------------ |
-| Malicious people try to dump out password hash and crack it  | Use a second factor hardware key to authenticate |
+| Threat Model                                                            | Countermeasure                                   |
+| ----------------------------------------------------------------------- | ------------------------------------------------ |
+| Malicious people try to dump out password hash and crack it             | Use a second factor hardware key to authenticate |
 | Malicious people use hardware key and password given to allowed people. | Use biometrics authentication                    |
 
-
-## 2. Proof of Work & DoS 
+## 2. Proof of Work & DoS
 
 ### 1.
 
 > Refs:
->
+> 
 > https://en.wikipedia.org/wiki/Denial-of-service_attack
 
 A DoS attack aims to keep other users from using the victim's service by exhausting the victim server's computation resources or bandwidth.
@@ -94,7 +88,7 @@ DDoS attack is a subset of DoS attack.
 ### 2.
 
 > Refs:
->
+> 
 > https://en.wikipedia.org/wiki/Proof_of_work
 > https://en.wikipedia.org/wiki/Proof_of_space
 
@@ -107,7 +101,7 @@ Proof of space is similar to proof of work, but a user need to have storage spac
 ### 3.
 
 > Refs:
->
+> 
 > b09902011 陳可邦
 
 Flag: `HW5{c4ts_ar3_a_1ot_cut3r_th4n_柴魚}`
@@ -116,14 +110,14 @@ Be reading `server.py`, we know that the flag will be shown if `qsort()` runs sl
 
 Code based on `example.py` to obtain the flag is in `p2-3.py`.
 
-![sec-p2-3](sec-p2-3.png)
+![sec-p2-3](pics/sec-p2-3.png)
 
 ---
 
 ### 4.
 
 > Refs:
->
+> 
 > b09902011 陳可邦
 > https://medium.com/swlh/exploiting-redos-d610e8ba531
 > https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS
@@ -151,14 +145,14 @@ So on and so on...
 
 Time complexity becomes exponential and DoS attacks become possible.
 
-![sec-p2-4](sec-p2-4.png)
+![sec-p2-4](pics/sec-p2-4.png)
 
 ---
 
 ### 5.
 
 > Refs:
->
+> 
 > b09902011 陳可邦
 
 Flag: `HW5{y0u_shou1d_w0rk_unt1l_4.am_wi7h_m3_ev3ry_d4y!}`
@@ -169,7 +163,7 @@ Because `proof_of_work()` the random number fed to hash only ranges from `0` to 
 
 Code to generate lookup table is in `gen_rainbow.py`. Code based on `example.py` to obtain the flag is in `p2-5.py`. Run `python gen_rainbow.py` first to generate the data needed.
 
-![sec-p2-5](sec-p2-5.png)
+![sec-p2-5](pics/sec-p2-5.png)
 
 ---
 
@@ -178,7 +172,7 @@ Code to generate lookup table is in `gen_rainbow.py`. Code based on `example.py`
 ### 1.
 
 > Refs:
->
+> 
 > https://ithelp.ithome.com.tw/articles/10248302
 > https://www.kshuang.xyz/doku.php/operating_system:nix_suid_sgid_in_unix
 
@@ -191,7 +185,7 @@ These two file permissions might accidently give normal users root permission to
 ### 2.
 
 > Refs:
->
+> 
 > https://unix.stackexchange.com/questions/127432/logging-ssh-access-attempts
 > https://www.eurovps.com/blog/important-linux-log-files-you-must-be-monitoring/
 > http://linux.vbird.org/linux_basic/0570syslog/0570syslog.php
@@ -211,7 +205,7 @@ A more inter-distro solution is to use `journalctl` to view the log.
 ### 3.
 
 > Refs:
->
+> 
 > https://unix.stackexchange.com/questions/70684/where-are-sudo-incidents-logged
 > https://askubuntu.com/questions/641049/who-are-incidents-really-reported-to-and-how-can-a-sudo-user-access-the-reports
 > https://stackoverflow.com/questions/13546933/where-are-sudo-incidents-reported
@@ -231,7 +225,7 @@ Same as last problem, `journalctl` is a more general solution.
 ### 4.
 
 > Refs:
->
+> 
 > https://unix.stackexchange.com/questions/314725/what-is-the-difference-between-user-and-service-account
 > https://unix.stackexchange.com/questions/115177/how-come-each-program-or-service-has-an-account-of-its-own-in-etc-passwd/115184
 > https://unix.stackexchange.com/questions/197124/why-are-there-many-accounts-im-the-only-user/197155
@@ -245,15 +239,15 @@ When all services run under `root`, if one of the services has some severe secur
 ### 5.
 
 > Refs:
->
+> 
 > https://medium.com/@vicxu/%E6%B7%BA%E8%AB%87-authentication-%E4%B8%AD%E9%9B%86-token-based-authentication-90139fbcb897
 
 **Token-based**
 
-| Pros                                        | Cons                                                         |
-| ------------------------------------------- | ------------------------------------------------------------ |
+| Pros                                        | Cons                                                           |
+| ------------------------------------------- | -------------------------------------------------------------- |
 | Difficult to brute-force                    | Adding new devices isn't trivial if using all token-based auth |
-| No worrying about things like smudge attack | Token leak is much more severe than password hash leak       |
+| No worrying about things like smudge attack | Token leak is much more severe than password hash leak         |
 
 **Password**
 
@@ -269,8 +263,8 @@ When all services run under `root`, if one of the services has some severe secur
 ### 1.
 
 > Refs:
->
->b09902011 陳可邦
+> 
+> b09902011 陳可邦
 > https://cccharles.pixnet.net/blog/post/326116524
 > https://samsclass.info/123/proj10/p12-hashcat.htm
 
@@ -299,16 +293,16 @@ wget https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/
 
 The password is `1qaz2wsx3edc4rfv`. The flag in the desktop image of the vm.
 
-![sec-p4-1](sec-p4-1.png)
+![sec-p4-1](pics/sec-p4-1.png)
 
-![sec-p4-1-2](sec-p4-1-2.png)
+![sec-p4-1-2](pics/sec-p4-1-2.png)
 
 ---
 
 ### 2.
 
 > Refs:
->
+> 
 > b09902011 陳可邦
 > https://security.stackexchange.com/questions/157922/how-are-windows-10-hashes-stored-if-the-account-is-setup-using-a-microsoft-accou
 > https://miloserdov.org/?p=4129
@@ -355,16 +349,16 @@ Since we are brute forcing, GPU would help a lot. I start with 8-character passw
 
 The password is `apple8787`. The flag is the filenames of files on desktop.
 
-![sec-p4-2-1](sec-p4-2-1.png)
+![sec-p4-2-1](pics/sec-p4-2-1.png)
 
-![sec-p4-2-2](sec-p4-2-2.png)
+![sec-p4-2-2](pics/sec-p4-2-2.png)
 
 ---
 
 ### 3.
 
 > Refs:
->
+> 
 > None
 
 1. Use hardware key authentication. For example, the "Security Key" option in Windows 10 login option.
@@ -375,14 +369,13 @@ The password is `apple8787`. The flag is the filenames of files on desktop.
 ## 5. WiFi Hacking
 
 > Refs:
->
+> 
 > b09902011 陳可邦
 > b09902100 林弘毅
 > https://null-byte.wonderhowto.com/how-to/hack-wi-fi-cracking-wpa2-psk-passwords-using-aircrack-ng-0148366/
 > https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2
 > https://wiki.wireshark.org/HowToDecrypt802.11
 > https://hackernoon.com/forcing-a-device-to-disconnect-from-wifi-using-a-deauthentication-attack-f664b9940142
-
 
 ### 1.
 
@@ -395,7 +388,7 @@ ifconfig # wlo1 will be replaced with a new interface, mine is wlo1mon
 sudo airodump-ng
 ```
 
-![sec-p5-1](sec-p5-1.png)
+![sec-p5-1](pics/sec-p5-1.png)
 
 An entry with ESSID `Palace of Joe Tsai` is the AP. It has MAC address `94:BF:C4:32:CC:88` on channel `4`.
 
@@ -421,7 +414,7 @@ Upload the `.cap` file to https://hashcat.net/cap2hccapx/ or download the execua
 ./hashcat-6.1.0/hashcat.bin -m 2500 -a 3 hash_wifi.hccapx 09?d?d?d?d?d?d?d?d
 ```
 
-![sec-p5-1-2](sec-p5-1-2.png)
+![sec-p5-1-2](pics/sec-p5-1-2.png)
 
 ---
 
@@ -433,12 +426,12 @@ Open `hack_wifi.cap` with WireShark. Go to `Edit` -> `Preferences` -> `Protocols
 
 Add a decryption key like this:
 
-![sec-p5-2-3](sec-p5-2-3.png)
+![sec-p5-2-3](pics/sec-p5-2-3.png)
 
 Go to `Statistics` -> `Conversations` -> `TCP`. Select arbitary entry and `follow stream` because they all have the same two hosts.
 
-![sec-p5-2-1](sec-p5-2-1.png)
-![sec-p5-2-2](sec-p5-2-2.png)
+![sec-p5-2-1](pics/sec-p5-2-1.png)
+![sec-p5-2-2](pics/sec-p5-2-2.png)
 
 ---
 
@@ -452,7 +445,7 @@ To obtain victim's MAC address, run:
 sudo airodump-ng wlo1mon --bssid 94:BF:C4:32:CC:88 -c 4 # the same command from p5-1
 ```
 
-![sec-p5-3-1](sec-p5-3-1.png)
+![sec-p5-3-1](pics/sec-p5-3-1.png)
 
 The victim's MAC address is shown in `STATION`, which is `8C:88:2B:00:73:6E`. To send attack, run:
 
@@ -467,21 +460,20 @@ sudo aireplay-ng --deauth 0 -c 8C:88:2B:00:73:6E -a 94:BF:C4:32:CC:88 wlo1mon
 
 Then check the web page with another device.
 
-![sec-p5-3-2](sec-p5-3-2.png)
+![sec-p5-3-2](pics/sec-p5-3-2.png)
 
 ---
-
 
 # LDAP
 
 > Note:
->
+> 
 > `.ldif` and `.schema` files are in `ldif/`. `.py` files are in `ldap-script/`.
 
 ## 1. Basic Setup
 
 > Refs:
->
+> 
 > Lab slides
 
 Create `suffix.ldif`, `root.ldif`, `base.ldif`.
@@ -498,14 +490,14 @@ ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
 ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f base.ldif
 ```
 
-![ldap-p1-1](ldap-p1-1.png)
+![ldap-p1-1](pics/ldap-p1-1.png)
 
 ---
 
 ## 2. Client
 
 > Refs:
->
+> 
 > https://pastleo.me/post/20200719-archlinux-installation
 > https://coodie-h.blogspot.com/2017/09/centos-7openldap.html
 > http://dic.vbird.tw/linux_server/unit07.php
@@ -524,7 +516,6 @@ On both machines, add this line to `/etc/hosts`
 
 On CentOS server:
 
-
 Add ldap to allowed services in firewall setting.
 
 ```shell
@@ -535,8 +526,8 @@ firewall-cmd --reload
 Add these lines in `/etc/openldap/ldap.conf`:
 
 ```
-BASE		dc=giver,dc=csie,dc=ntu
-URI			ldap:///
+BASE        dc=giver,dc=csie,dc=ntu
+URI            ldap:///
 ```
 
 On Arch client:
@@ -551,8 +542,8 @@ vim /etc/openldap/ldap.conf
 Add these lines in `/etc/openldap/ldap.conf`:
 
 ```
-BASE		dc=giver,dc=csie,dc=ntu
-URI			ldap://centos-server
+BASE        dc=giver,dc=csie,dc=ntu
+URI            ldap://centos-server
 ```
 
 ---
@@ -619,7 +610,7 @@ ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f stu00.ldif
 ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f ta00.ldif
 ```
 
-![ldap-p2-2](ldap-p2-2.png)
+![ldap-p2-2](pics/ldap-p2-2.png)
 
 ---
 
@@ -637,7 +628,7 @@ Add this line:
 %ta ALL=(ALL) NOPASSWD: ALL
 ```
 
-![ldap-p2-3](ldap-p2-3.png)
+![ldap-p2-3](pics/ldap-p2-3.png)
 
 ---
 
@@ -652,7 +643,7 @@ Add this line:
 ## 3. Schema
 
 > Refs:
->
+> 
 > https://guillaumemaka.com/2013/07/17/openldap-create-a-custom-ldap-schema/
 > https://www.openldap.org/doc/admin22/schema.html
 
@@ -705,14 +696,14 @@ ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f p00.ldif
 ldapadd -x -W -D "cn=giver,dc=giver,dc=csie,dc=ntu" -H ldapi:/// -f p01.ldif
 ```
 
-![ldap-p3](ldap-p3.png)
+![ldap-p3](pics/ldap-p3.png)
 
 ---
 
 ## 4. Access Control
 
 > Refs:
->
+> 
 > https://www.openldap.org/doc/admin24/access-control.html
 > https://unix.stackexchange.com/questions/444332/how-to-restrict-user-based-on-ip-address-in-openldap
 
@@ -731,7 +722,7 @@ ldapmodify -Y EXTERNAL -H ldapi:/// -f manage-access.ldif
 ## 5. Multiple LDAP Servers
 
 > Refs:
->
+> 
 > https://serverfault.com/questions/730088/how-to-migrate-ldap-database-schema-configuration-to-other-machine
 > https://www.jianshu.com/p/34dc6412de30
 > https://www.openldap.org/doc/admin24/replication.html#MirrorMode
@@ -833,10 +824,10 @@ ldapadd -Y EXTERNAL -H ldapi:/// -f node02.ldif
 ## 6. Scripting
 
 > Refs:
->
+> 
 > https://www.python-ldap.org/en/python-ldap-3.3.0/reference/ldap.html
 > https://iter01.com/363962.html
->https://stackoverflow.com/questions/29586435/openldap-how-to-disable-enable-remove-user-account
+> https://stackoverflow.com/questions/29586435/openldap-how-to-disable-enable-remove-user-account
 
 ### Requirements
 
@@ -904,7 +895,7 @@ This method is a bit dirty and doesn't prevent user from using ssh-key, but can 
 
 #### Demo
 
-![ldap-p6-2](ldap-p6-2.png)
+![ldap-p6-2](pics/ldap-p6-2.png)
 
 ---
 

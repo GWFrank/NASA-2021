@@ -1,7 +1,3 @@
----
-typora-root-url: pics
----
-
 # NASA HW2
 
 b09902004 郭懷元
@@ -13,11 +9,11 @@ b09902004 郭懷元
 #### 1.
 
 > Reference:
->
+> 
 > http://www.cs.nthu.edu.tw/~nfhuang/chap04.htm
->
+> 
 > https://zh.wikipedia.org/wiki/%E8%BD%BD%E6%B3%A2%E4%BE%A6%E5%90%AC%E5%A4%9A%E8%B7%AF%E8%AE%BF%E9%97%AE
->
+> 
 > https://www.geeksforgeeks.org/collision-avoidance-in-wireless-networks/
 
 CSMA/CD passively detects if a collision has happened. If it detects a collision, it will stop sending frames as soon as possible. CSMA/CA, on the other hand, will check if the medium is busy or not before sending anything. If it's busy, it will wait for a random time then continue the transmission. CSMA/CA also uses a three-way handshake called RTS/CTS.
@@ -27,9 +23,9 @@ In wireless network, it's really difficult to precisely detect a collision, beca
 #### 2.
 
 > References:
->
+> 
 > http://ccna2012.weebly.com/24291257732131222495-30896257583893622495.html
->
+> 
 > https://www.geeksforgeeks.org/collision-domain-and-broadcast-domain-in-computer-network/
 
 Collision domain is the range where the frames transferred will collide with each other. Broadcast domain is the range where a broadcast message sent by any device will be received by every other devices in this domain.
@@ -43,9 +39,9 @@ Collision domain is the range where the frames transferred will collide with eac
 #### 3.
 
 > References:
->
+> 
 > https://en.wikipedia.org/wiki/Broadcast_storm
->
+> 
 > https://en.wikipedia.org/wiki/Spanning_Tree_Protocol
 
 When many broadcast traffics accumulate on a network and consumes lots of resources, we called this broadcast storm. It's usually caused by loops in network topology. STP solve this problem by cutting excessive paths , breaking all loops in the network topology.
@@ -73,7 +69,7 @@ iperf -s -i 5
 
 Result
 
-![iperf-p1](iperf-p1.png)
+![iperf-p1](pics/iperf-p1.png)
 
 **From laptop (connected to `csie-5G`) to R204 PC**
 
@@ -92,7 +88,7 @@ iperf -c 192.168.204.36 -t 60 -i 5
 
 Result
 
-![iperf-p2-1](iperf-p2-1.png)
+![iperf-p2-1](pics/iperf-p2-1.png)
 
 **From R204 PC to laptop  (connected to `csie-5G`)**
 
@@ -111,7 +107,7 @@ iperf -c 10.5.0.147 -t 60
 
 Result
 
-![iperf-p2-2](iperf-p2-2.png)
+![iperf-p2-2](pics/iperf-p2-2.png)
 
 **From laptop A to laptop B (both connected to `csie-5G`)**
 
@@ -130,7 +126,7 @@ iperf -c 10.5.6.200 -t 60 -i 5
 
 Result
 
-![iperf-p3](iperf-p3.png)
+![iperf-p3](pics/iperf-p3.png)
 
 #### 2.
 
@@ -149,14 +145,14 @@ The lowest bandwidth occurs when both server and client are connected to WiFi, b
 
 ---
 
- ### 3. IPv6
+### 3. IPv6
 
 > Reference:
->
+> 
 > https://unix.stackexchange.com/questions/457670/netcat-how-to-listen-on-a-tcp-port-using-ipv6-address
->
+> 
 > https://ithelp.ithome.com.tw/articles/10244029
->
+> 
 > https://stackoverflow.com/questions/24780404/python-tcp-socket-with-ipv6-address-failed
 
 Commands:
@@ -172,7 +168,7 @@ Server message:
 284a1e00b75784f5ab2f45a086e48bb6
 ```
 
-![ipv6](ipv6.png)
+![ipv6](pics/ipv6.png)
 
 ---
 
@@ -181,15 +177,15 @@ Server message:
 ### 1.
 
 > Reference:
->
+> 
 > Lab 3 slides
->
+> 
 > https://zh.wikipedia.org/wiki/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F
->
+> 
 > http://linux.vbird.org/linux_basic/0230filesystem.php
->
+> 
 > https://askubuntu.com/questions/24027/how-can-i-resize-an-ext-root-partition-at-runtime
->
+> 
 > https://unix.stackexchange.com/questions/61209/create-and-format-exfat-partition-from-linux
 
 Commands:
@@ -227,14 +223,14 @@ reboot
 lsblk; df -hT
 ```
 
-![sa-p1](sa-p1.png)
+![sa-p1](pics/sa-p1.png)
 
 ---
 
 ### 2.
 
 > Reference:
->
+> 
 > https://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/
 
 Commands:
@@ -249,14 +245,14 @@ swapon /myswap
 free -h
 ```
 
-![sa-p2](/sa-p2.png)
+![sa-p2](pics/sa-p2.png)
 
 ---
 
 ### 3.
 
 > References:
->
+> 
 > https://linuxhint.com/set-up-btrfs-raid/
 
 Commands:
@@ -270,14 +266,14 @@ sudo chown nasa:nasa ~/mnt
 sudo btrfs filesystem show /home/nasa/mnt; sudo btrfs filesystem df /home/nasa/mnt
 ```
 
-![sa-p3](/sa-p3.png)
+![sa-p3](pics/sa-p3.png)
 
 ---
 
 ### 4.
 
 > References:
->
+> 
 > https://linuxhint.com/create-mount-btrfs-subvolumes/
 
 Commands:
@@ -295,14 +291,14 @@ sudo vim /etc/fstab
 sudo reboot
 ```
 
-![sa-p4](/sa-p4.png)
+![sa-p4](pics/sa-p4.png)
 
 ---
 
 ### 5.
 
 > References:
->
+> 
 > https://linuxhint.com/use-btrfs-snapshots/
 
 Commands:
@@ -316,7 +312,7 @@ sudo btrfs subvolume snapshot -r /home/nasa/courses/documents /home/nasa/courses
 ### 6.
 
 > References:
->
+> 
 > https://linuxhint.com/back_up_btrfs_snapshots_external_drives/
 
 Commands:
@@ -327,16 +323,16 @@ sudo btrfs subvolume snapshot -r /home/nasa/courses/videos /home/nasa/courses/vi
 sudo btrfs send /home/nasa/courses/videos_backup | sudo btrfs receive /home/nasa/backup
 ```
 
-![sa-p6](/sa-p6.png)
+![sa-p6](pics/sa-p6.png)
 
 ---
 
 ### 7.
 
 > References:
->
+> 
 > https://btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices
->
+> 
 > https://superuser.com/questions/901067/btrfs-convert-from-raid1-to-raid5
 
 Commands
@@ -346,14 +342,14 @@ sudo btrfs device add /dev/sdd /home/nasa/courses
 sudo btrfs balance start -dconvert=raid5 -mconvert=raid5 /home/nasa/courses
 ```
 
-![sa-p7](/sa-p7.png)
+![sa-p7](pics/sa-p7.png)
 
 ---
 
 ### 8.
 
 > References:
->
+> 
 > https://btrfs.wiki.kernel.org/index.php/Using_Btrfs_with_Multiple_Devices
 
 Commands
@@ -363,7 +359,7 @@ sudo btrfs device delete /dev/sdc /home/nasa/courses
 sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /home/nasa/courses
 ```
 
-![sa-p8](/sa-p8.png)
+![sa-p8](pics/sa-p8.png)
 
 ---
 
@@ -372,9 +368,9 @@ sudo btrfs balance start -dconvert=raid1 -mconvert=raid1 /home/nasa/courses
 #### (i)
 
 > References:
->
+> 
 > https://en.wikipedia.org/wiki/Comparison_of_file_systems
->
+> 
 > https://linuxhint.com/btrfs-vs-ext4-filesystems-comparison/
 
 Btrfs has built-in RAID 1, RAID 0 , and RAID 10 support, but ext4 doesn't have any RAID built-in. Btrfs supports online shrinking, but ext4 doesn't support it.
@@ -382,7 +378,7 @@ Btrfs has built-in RAID 1, RAID 0 , and RAID 10 support, but ext4 doesn't have a
 #### (ii)
 
 > References:
->
+> 
 > https://zh.wikipedia.org/wiki/RAID
 
 In RAID 0, we parallelize reading and writing over all the disks in the array, thus increase performance. Files would have only a single copy and the data is distributed all over the disk array.
@@ -396,9 +392,9 @@ RAID 10 is a combination of RAID 1 and RAID 0. Two disks are paired to build a R
 #### (iii)
 
 > References:
->
+> 
 > https://medium.com/@jain.sm/filesystem-in-userspace-5d1b398b04e
->
+> 
 > https://www.jianshu.com/p/c2b77d0bbc43
 
 FUSE is a feature that lets users define file operations and create their filesystems without having to deal with kernel-related stuff. One advantage is that it can be more portable because libraries would deal with the kernel. The obvious disadvantage is that efficiency is worse than those directly implemented in kernel.
@@ -406,13 +402,13 @@ FUSE is a feature that lets users define file operations and create their filesy
 #### (iv)
 
 > References:
->
+> 
 > https://en.wikipedia.org/wiki/ZFS
->
+> 
 > https://zh.wikipedia.org/wiki/RAID
->
+> 
 > https://www.reddit.com/r/homelab/comments/b4iz3w/zfs_vs_hardware_raid/
->
+> 
 > https://superuser.com/questions/1134753/can-zfs-cope-with-sudden-power-loss-what-events-cause-a-pool-to-be-irrecoverab
 
 ZFS is a system that combines both file system and volume manager. It has control from physical layer to file system layer. ZFS uses many checksum mechanisms to secure data. It also has features like RAID, snapshots, and cloning.
